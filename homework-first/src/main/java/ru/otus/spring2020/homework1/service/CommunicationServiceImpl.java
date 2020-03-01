@@ -33,7 +33,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Пользователь " + student.getFio() + " вы верно ответили на " + student.getMark());
+        System.out.println("Пользователь " + student.getFio() + ", количество вопросов, на которые вы верно ответили, равно " + student.getMark());
         System.out.println("Поздравляем! Вы особенный!");
     }
 }
