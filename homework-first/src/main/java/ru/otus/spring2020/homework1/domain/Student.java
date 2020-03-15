@@ -12,5 +12,5 @@ import lombok.Setter;
 public class Student {
 
     private String fio;
-    private int mark;
+
 }
