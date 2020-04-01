@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StudentDaoSimple implements StudentDao {
 
-    private final int mark;
+    private int mark;
 
     public StudentDaoSimple() {
-        this.mark = (int) (Math.random() * 5);
+        this.mark = 0;
     }
 
     public Student findByName(String name) {
@@ -20,5 +20,9 @@ public class StudentDaoSimple implements StudentDao {
 
     public int getMarkByName(String name) {
         return mark;
+    }
+
+    public void addPointByName(String name, int point) {
+        mark += point;
     }
 }

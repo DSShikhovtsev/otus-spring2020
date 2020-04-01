@@ -6,4 +6,5 @@ public interface StudentDao {
 
     Student findByName(String name);
     int getMarkByName(String name);
+    void addPointByName(String name, int point);
 }

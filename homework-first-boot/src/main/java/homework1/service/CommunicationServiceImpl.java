@@ -1,16 +1,15 @@
 package homework1.service;
 
 import homework1.domain.Student;
+import homework1.exception.SimpleException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @AllArgsConstructor
 @Service
 public class CommunicationServiceImpl implements CommunicationService {
 
-    private final FileworkService fileworkService;
+    private final ConsoleService consoleService;
     private final StudentService studentService;
     private final QuestionsService questionsService;
 
@@ -18,13 +17,13 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         Student student = new Student();
 
-        fileworkService.hello();
+        consoleService.hello();
         try {
-            student = studentService.getByName(fileworkService.readLine());
-            fileworkService.consoleWorking(questionsService.getQuestions());
-        } catch (IOException e) {
+            student = studentService.getByName(consoleService.readLine());
+            studentService.addPointByName(student.getFio(), consoleService.readQuestions(questionsService.getQuestionsAndAnswers()));
+        } catch (SimpleException e) {
             e.printStackTrace();
         }
-        fileworkService.bye(student.getFio(), studentService.getMarkByName(student.getFio()));
+        consoleService.bye(student.getFio(), studentService.getMarkByName(student.getFio()));
     }
 }

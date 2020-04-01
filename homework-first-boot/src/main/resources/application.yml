@@ -2,4 +2,11 @@ question:
   file: questions.csv
 
 bundle:
-  file: bundle
+  locale: RU
+
+spring:
+  messages:
+    basename: bundle
+
+config:
+  i18n: messages

@@ -1,11 +1,11 @@
 package homework1.dao;
 
-import org.springframework.stereotype.Repository;
+import homework1.domain.Question;
+import homework1.exception.SimpleException;
 
-import java.io.File;
+import java.util.List;
 
-@Repository
 public interface QuestionsDao {
 
-    File getQuestions();
+    List<Question> getQuestions() throws SimpleException;
 }

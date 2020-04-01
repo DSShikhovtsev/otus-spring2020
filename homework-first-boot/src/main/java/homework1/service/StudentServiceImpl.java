@@ -18,4 +18,8 @@ public class StudentServiceImpl implements StudentService {
     public int getMarkByName(String name) {
         return dao.getMarkByName(name);
     }
+
+    public void addPointByName(String name, int points) {
+        dao.addPointByName(name, points);
+    }
 }
