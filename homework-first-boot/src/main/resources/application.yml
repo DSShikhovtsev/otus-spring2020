@@ -1,6 +1,3 @@
-question:
-  file: questions.csv
-
 bundle:
   locale: RU
 

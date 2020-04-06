@@ -2,12 +2,10 @@ package homework1.dao;
 
 import homework1.domain.Question;
 import homework1.exception.SimpleException;
-import homework1.properties.QuestionsProperties;
-import lombok.AllArgsConstructor;
+import homework1.properties.LocaleProperties;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Repository;
 
 import java.io.BufferedReader;
@@ -20,11 +18,13 @@ import java.util.*;
 @Repository
 public class QuestionsDaoCsv implements QuestionsDao {
 
-    private QuestionsProperties properties;
+    private MessageSource messageSource;
+    private LocaleProperties localeProperties;
 
     @Autowired
-    public QuestionsDaoCsv(QuestionsProperties properties) {
-        this.properties = properties;
+    public QuestionsDaoCsv(MessageSource messageSource, LocaleProperties localeProperties) {
+        this.messageSource = messageSource;
+        this.localeProperties = localeProperties;
     }
 
     public List<Question> getQuestions() throws SimpleException {
@@ -53,6 +53,6 @@ public class QuestionsDaoCsv implements QuestionsDao {
 
     private File getFile() {
         ClassLoader loader = QuestionsDaoCsv.class.getClassLoader();
-        return new File(loader.getResource(properties.getFile()).getFile());
+        return new File(loader.getResource(messageSource.getMessage("questions", null, new Locale(localeProperties.getLocale()))).getFile());
     }
 }
