@@ -1,6 +1,5 @@
 package homework1.service;
 
-import homework1.domain.Student;
 import homework1.exception.SimpleException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,15 +14,15 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     public void communicate() {
 
-        Student student = new Student();
+        String fio = "";
 
         consoleService.hello();
         try {
-            student = studentService.getByName(consoleService.readLine());
-            studentService.addPointByName(student.getFio(), consoleService.readQuestions(questionsService.getQuestionsAndAnswers()));
+            fio = consoleService.readLine();
+            studentService.addPointByName(fio, consoleService.askQuestionsAndGetRightAnswersCount(questionsService.getQuestionsAndAnswers()));
         } catch (SimpleException e) {
             e.printStackTrace();
         }
-        consoleService.bye(student.getFio(), studentService.getMarkByName(student.getFio()));
+        consoleService.bye(fio, studentService.getMarkByName(fio));
     }
 }

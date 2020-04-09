@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    private StudentDao dao;
+    private final StudentDao dao;
 
     public Student getByName(String name) {
         return dao.findByName(name);

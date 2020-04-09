@@ -1,8 +1,9 @@
 package homework1.dao;
 
 import homework1.domain.Question;
-import homework1.exception.SimpleException;
+import homework1.exception.QuestionsAndAnswerLoadingException;
 import homework1.properties.LocaleProperties;
+import homework1.properties.QuestionProperties;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -18,24 +19,22 @@ import java.util.*;
 @Repository
 public class QuestionsDaoCsv implements QuestionsDao {
 
-    private MessageSource messageSource;
-    private LocaleProperties localeProperties;
+    private QuestionProperties questionProperties;
 
     @Autowired
-    public QuestionsDaoCsv(MessageSource messageSource, LocaleProperties localeProperties) {
-        this.messageSource = messageSource;
-        this.localeProperties = localeProperties;
+    public QuestionsDaoCsv(QuestionProperties questionProperties) {
+        this.questionProperties = questionProperties;
     }
 
-    public List<Question> getQuestions() throws SimpleException {
+    public List<Question> getQuestions() throws QuestionsAndAnswerLoadingException {
         return getQuestionsFromFile();
     }
 
-    private List<Question> getQuestionsFromFile() throws SimpleException {
+    private List<Question> getQuestionsFromFile() throws QuestionsAndAnswerLoadingException {
         return convertQuestions();
     }
 
-    private List<Question> convertQuestions() throws SimpleException {
+    private List<Question> convertQuestions() throws QuestionsAndAnswerLoadingException {
         List<Question> queAns = new ArrayList<>();
         String[] data;
         try {
@@ -46,13 +45,13 @@ public class QuestionsDaoCsv implements QuestionsDao {
                 queAns.add(new Question(data[0], data[1]));
             }
         } catch (IOException e) {
-            throw new SimpleException(e);
+            throw new QuestionsAndAnswerLoadingException(e);
         }
         return queAns;
     }
 
     private File getFile() {
         ClassLoader loader = QuestionsDaoCsv.class.getClassLoader();
-        return new File(loader.getResource(messageSource.getMessage("questions", null, new Locale(localeProperties.getLocale()))).getFile());
+        return new File(loader.getResource(questionProperties.getFile()).getFile());
     }
 }

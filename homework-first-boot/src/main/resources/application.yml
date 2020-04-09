@@ -1,5 +1,8 @@
+question:
+  file: questions_RU.csv
+
 bundle:
-  locale: RU
+  locale: ru-RU
 
 spring:
   messages:

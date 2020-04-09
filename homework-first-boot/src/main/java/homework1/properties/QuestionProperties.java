@@ -5,13 +5,11 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.Locale;
-
 @Component
 @Getter
 @Setter
-@ConfigurationProperties("bundle")
-public class LocaleProperties {
+@ConfigurationProperties("question")
+public class QuestionProperties {
 
-    private Locale locale;
+    private String file;
 }
