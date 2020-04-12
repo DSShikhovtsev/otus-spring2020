@@ -4,10 +4,9 @@ import homework1.domain.Question;
 
 import java.util.List;
 
-public interface ConsoleService {
+public interface CommunicationOutputService {
 
     int askQuestionsAndGetRightAnswersCount(List<Question> list);
-    String readLine();
     void hello();
     void bye(String fio, int mark);
 }

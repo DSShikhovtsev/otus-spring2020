@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Scanner;
 
 @Service
-public class ConsoleServiceImpl implements ConsoleService {
+public class ConsoleOutputService implements CommunicationOutputService {
 
     private MessageSource messageSource;
     private LocaleProperties localeProperties;
 
     @Autowired
-    public ConsoleServiceImpl(MessageSource messageSource, LocaleProperties localeProperties) {
+    public ConsoleOutputService(MessageSource messageSource, LocaleProperties localeProperties) {
         this.messageSource = messageSource;
         this.localeProperties = localeProperties;
     }
@@ -39,11 +39,6 @@ public class ConsoleServiceImpl implements ConsoleService {
             }
         }
         return point;
-    }
-
-    public String readLine() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
     }
 
     public void hello() {

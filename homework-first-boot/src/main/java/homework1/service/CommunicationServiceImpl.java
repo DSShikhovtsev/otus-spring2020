@@ -8,21 +8,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommunicationServiceImpl implements CommunicationService {
 
-    private final ConsoleService consoleService;
+    private final CommunicationOutputService communicationOutputService;
     private final StudentService studentService;
     private final QuestionsService questionsService;
+    private final CommunicationInputService communicationInputService;
 
     public void communicate() {
 
         String fio = "";
 
-        consoleService.hello();
+        communicationOutputService.hello();
         try {
-            fio = consoleService.readLine();
-            studentService.addPointByName(fio, consoleService.askQuestionsAndGetRightAnswersCount(questionsService.getQuestionsAndAnswers()));
+            fio = communicationInputService.readLine();
+            studentService.addPointByName(fio, communicationOutputService.askQuestionsAndGetRightAnswersCount(questionsService.getQuestionsAndAnswers()));
         } catch (SimpleException e) {
             e.printStackTrace();
         }
-        consoleService.bye(fio, studentService.getMarkByName(fio));
+        communicationOutputService.bye(fio, studentService.getMarkByName(fio));
     }
 }

@@ -11,10 +11,10 @@ import java.util.Map;
 @Repository
 public class StudentDaoSimple implements StudentDao {
 
-    private Map<String, Integer> studentsMark;
+    private final Map<String, Integer> studentsMark;
 
     public StudentDaoSimple() {
-        this.studentsMark = new HashMap();
+        this.studentsMark = new HashMap<>();
     }
 
     public Student findByName(String name) {

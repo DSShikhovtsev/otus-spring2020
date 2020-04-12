@@ -9,9 +9,12 @@ import java.util.Locale;
 
 @Component
 @Getter
-@Setter
 @ConfigurationProperties("bundle")
 public class LocaleProperties {
 
     private Locale locale;
+
+    public void setLocale(String locale) {
+        this.locale = Locale.forLanguageTag(locale);
+    }
 }
