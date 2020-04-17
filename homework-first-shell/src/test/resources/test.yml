@@ -1,0 +1,12 @@
+question:
+  file: questions.csv
+
+bundle:
+  locale: en-US
+
+spring:
+  messages:
+    basename: bundle
+
+config:
+  i18n: messages
