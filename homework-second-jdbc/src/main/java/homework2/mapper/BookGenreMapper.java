@@ -1,6 +1,6 @@
 package homework2.mapper;
 
-import homework2.domain.BooksGenres;
+import homework2.entityReference.BooksGenres;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

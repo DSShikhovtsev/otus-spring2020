@@ -1,9 +1,7 @@
 package homework2.dao;
 
 import homework2.domain.Author;
-import homework2.domain.AuthorsBooks;
 import homework2.domain.Book;
-import homework2.mapper.AuthorBookMapper;
 import homework2.mapper.AuthorMapper;
 import homework2.mapper.BookMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -15,11 +13,9 @@ import java.util.*;
 public class AuthorDaoJdbc implements AuthorDao {
 
     private final NamedParameterJdbcOperations jdbc;
-    private final AuthorsBooksDao authorsBooksDao;
 
-    public AuthorDaoJdbc(NamedParameterJdbcOperations jdbc, AuthorsBooksDao authorsBooksDao) {
+    public AuthorDaoJdbc(NamedParameterJdbcOperations jdbc) {
         this.jdbc = jdbc;
-        this.authorsBooksDao = authorsBooksDao;
     }
 
     @Override
@@ -28,7 +24,7 @@ public class AuthorDaoJdbc implements AuthorDao {
         authorParams.put("name", author.getName());
         jdbc.update("insert into authors(name) values(:name)", authorParams);
         Long id = findMaxId();
-        author.getBooks().forEach(book -> authorsBooksDao.insertIntoAuthorsBooks(id, book.getId()));
+        author.getBooks().forEach(book -> insertIntoAuthorsBooks(id, book.getId()));
     }
 
     private Long findMaxId() {
@@ -60,25 +56,41 @@ public class AuthorDaoJdbc implements AuthorDao {
     }
 
     private List<Book> findBooksByAuthorId(Long id) {
-        List<AuthorsBooks> authorsBooks = jdbc.query("select * from authors_books where id_author = :id", Collections.singletonMap("id", id), new AuthorBookMapper());
-        List<Long> booksIds = new ArrayList<>();
-        authorsBooks.forEach(t -> booksIds.add(t.getIdBook()));
-        return jdbc.query("select * from books where id in (:ids)", Collections.singletonMap("ids", booksIds), new BookMapper());
+        return jdbc.query("select * from books where id in " +
+                "(select id_book from authors_books where id_author = :id)", Collections.singletonMap("id", id), new BookMapper());
     }
 
     @Override
     public void deleteById(Long id) {
+        deleteByAuthorId(id);
         jdbc.update("delete from authors where id = :id", Collections.singletonMap("id", id));
-        authorsBooksDao.deleteByAuthorId(id);
     }
 
     @Override
     public void addBookByAuthorId(Long authorId, Long bookId) {
-        authorsBooksDao.insertIntoAuthorsBooks(authorId, bookId);
+        insertIntoAuthorsBooks(authorId, bookId);
     }
 
     @Override
     public void deleteBookByAuthorId(Long authorId, Long bookId) {
-        authorsBooksDao.deleteFromAuthorsBooks(authorId, bookId);
+        deleteFromAuthorsBooks(authorId, bookId);
+    }
+
+    private void insertIntoAuthorsBooks(Long authorId, Long bookId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("authorId", authorId);
+        params.put("bookId", bookId);
+        jdbc.update("insert into authors_books(id_author, id_book) values(:authorId, :bookId)", params);
+    }
+
+    public void deleteFromAuthorsBooks(Long authorId, Long bookId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("authorId", authorId);
+        params.put("bookId", bookId);
+        jdbc.update("delete from authors_books where id_author = :authorId and id_book = :bookId", params);
+    }
+
+    private void deleteByAuthorId(Long id) {
+        jdbc.update("delete from authors_books where id_author = :authorId", Collections.singletonMap("authorId", id));
     }
 }

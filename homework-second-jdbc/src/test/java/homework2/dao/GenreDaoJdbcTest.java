@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Dao для работы с жанрами")
 @ExtendWith(SpringExtension.class)
 @JdbcTest
-@Import({GenreDaoJdbc.class, BooksGenreJdbc.class})
+@Import({GenreDaoJdbc.class})
 class GenreDaoJdbcTest {
 
     @Autowired

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Dao для работы с авторами")
 @ExtendWith(SpringExtension.class)
 @JdbcTest
-@Import({AuthorDaoJdbc.class, AuthorsBooksJdbc.class})
+@Import({AuthorDaoJdbc.class})
 class AuthorDaoJdbcTest {
 
     @Autowired

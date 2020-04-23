@@ -1,4 +1,4 @@
-package homework2.domain;
+package homework2.entityReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

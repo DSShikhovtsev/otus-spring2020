@@ -14,11 +14,9 @@ import java.util.Map;
 public class GenreDaoJdbc implements GenreDao {
 
     private final NamedParameterJdbcOperations jdbc;
-    private final BooksGenreDao booksGenreDao;
 
-    public GenreDaoJdbc(NamedParameterJdbcOperations jdbc, BooksGenreDao booksGenreDao) {
+    public GenreDaoJdbc(NamedParameterJdbcOperations jdbc) {
         this.jdbc = jdbc;
-        this.booksGenreDao = booksGenreDao;
     }
 
     @Override
@@ -38,8 +36,8 @@ public class GenreDaoJdbc implements GenreDao {
 
     @Override
     public void deleteById(Long id) {
+        deleteByGenreId(id);
         jdbc.update("delete from genres where id = :id", Collections.singletonMap("id", id));
-        booksGenreDao.deleteByGenreId(id);
     }
 
     @Override
@@ -48,5 +46,9 @@ public class GenreDaoJdbc implements GenreDao {
         params.put("id", genre.getId());
         params.put("description", genre.getDescription());
         jdbc.update("update genres set description = :description where id = :id", params);
+    }
+
+    private void deleteByGenreId(Long id) {
+        jdbc.update("delete from books_genres where id_genre = :genreId", Collections.singletonMap("genreId", id));
     }
 }

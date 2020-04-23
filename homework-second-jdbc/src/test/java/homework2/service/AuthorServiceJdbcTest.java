@@ -1,7 +1,6 @@
 package homework2.service;
 
 import homework2.dao.AuthorDaoJdbc;
-import homework2.dao.AuthorsBooksJdbc;
 import homework2.domain.Author;
 import homework2.domain.Book;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Service для работы с авторами")
 @ExtendWith(SpringExtension.class)
 @JdbcTest
-@Import({AuthorServiceJdbc.class, AuthorDaoJdbc.class, AuthorsBooksJdbc.class})
+@Import({AuthorServiceJdbc.class, AuthorDaoJdbc.class})
 class AuthorServiceJdbcTest {
 
     @Autowired

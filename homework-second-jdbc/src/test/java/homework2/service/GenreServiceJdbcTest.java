@@ -1,6 +1,5 @@
 package homework2.service;
 
-import homework2.dao.BooksGenreJdbc;
 import homework2.dao.GenreDaoJdbc;
 import homework2.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
@@ -17,10 +16,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Dao для работы с жанрами")
+@DisplayName("Service для работы с жанрами")
 @ExtendWith(SpringExtension.class)
 @JdbcTest
-@Import({GenreServiceJdbc.class, GenreDaoJdbc.class, BooksGenreJdbc.class})
+@Import({GenreServiceJdbc.class, GenreDaoJdbc.class})
 class GenreServiceJdbcTest {
 
     @Autowired
