@@ -4,7 +4,6 @@ import homework2.domain.Author;
 import homework2.service.AuthorService;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
@@ -28,7 +27,7 @@ public class ShellAuthorCommands {
 
     @ShellMethod(value = "add author", key = {"addA", "addAuthor"})
     public void addAuthor(@ShellOption String name) {
-        authorService.putNewAuthor(new Author(name));
+        authorService.save(new Author(name));
     }
 
     @ShellMethod(value = "delete author by id", key = {"delA", "delAuthor", "deleteAuthor"})

@@ -27,7 +27,7 @@ public class ShellGenreCommands {
 
     @ShellMethod(value = "add genre", key = {"addG", "addGenre"})
     public void addGenre(@ShellOption String description) {
-        genreService.putNewGenre(new Genre(description));
+        genreService.save(new Genre(description));
     }
 
     @ShellMethod(value = "delete genre by id", key = {"delG", "delGenre", "deleteGenre"})

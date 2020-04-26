@@ -1,54 +1,54 @@
 package homework2.dao;
 
 import homework2.domain.Genre;
-import homework2.mapper.GenreMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashMap;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
-import java.util.Map;
 
+@Transactional
 @Repository
 public class GenreDaoJdbc implements GenreDao {
 
-    private final NamedParameterJdbcOperations jdbc;
-
-    public GenreDaoJdbc(NamedParameterJdbcOperations jdbc) {
-        this.jdbc = jdbc;
-    }
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
-    public void insert(Genre genre) {
-        jdbc.update("insert into genres(description) values(:desc)", Collections.singletonMap("desc", genre.getDescription()));
+    public void save(Genre genre) {
+        if (genre.getId() == null || genre.getId() <= 0) {
+            em.persist(genre);
+        } else {
+            em.merge(genre);
+        }
     }
 
     @Override
     public Genre getById(Long id) {
-        return jdbc.queryForObject("select * from genres where id = (:id)", Collections.singletonMap("id", id), new GenreMapper());
+        return em.find(Genre.class, id);
     }
 
     @Override
     public List<Genre> findAll() {
-        return jdbc.query("select * from genres", new GenreMapper());
+        return em.createQuery("select g from Genre g", Genre.class).getResultList();
     }
 
     @Override
     public void deleteById(Long id) {
-        deleteByGenreId(id);
-        jdbc.update("delete from genres where id = :id", Collections.singletonMap("id", id));
+        Query query = em.createQuery("delete from Genre g where g.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 
     @Override
     public void update(Genre genre) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", genre.getId());
-        params.put("description", genre.getDescription());
-        jdbc.update("update genres set description = :description where id = :id", params);
-    }
-
-    private void deleteByGenreId(Long id) {
-        jdbc.update("delete from books_genres where id_genre = :genreId", Collections.singletonMap("genreId", id));
+        Query query = em.createQuery("update Genre g " +
+                "set g.description = :description " +
+                "where g.id = :id");
+        query.setParameter("id", genre.getId());
+        query.setParameter("description", genre.getDescription());
+        query.executeUpdate();
     }
 }

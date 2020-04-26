@@ -16,8 +16,8 @@ public class AuthorServiceJdbc implements AuthorService {
     }
 
     @Override
-    public void putNewAuthor(Author author) {
-        authorDao.insert(author);
+    public void save(Author author) {
+        authorDao.save(author);
     }
 
     @Override

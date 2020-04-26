@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GenreDao {
 
-    void insert(Genre genre);
+    void save(Genre genre);
     Genre getById(Long id);
     List<Genre> findAll();
     void deleteById(Long id);

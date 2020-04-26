@@ -16,8 +16,8 @@ public class GenreServiceJdbc implements GenreService {
     }
 
     @Override
-    public void putNewGenre(Genre genre) {
-        genreDao.insert(genre);
+    public void save(Genre genre) {
+        genreDao.save(genre);
     }
 
     @Override

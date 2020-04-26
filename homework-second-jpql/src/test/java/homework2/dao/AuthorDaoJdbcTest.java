@@ -1,72 +1,70 @@
 package homework2.dao;
 
 import homework2.domain.Author;
-import homework2.domain.Book;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Dao для работы с авторами")
-@ExtendWith(SpringExtension.class)
-@JdbcTest
+@DataJpaTest
 @Import({AuthorDaoJdbc.class})
 class AuthorDaoJdbcTest {
 
     @Autowired
     private AuthorDaoJdbc dao;
 
+    @Autowired
+    private TestEntityManager em;
+
     @Test
     @DisplayName("возвращать ожидаемого автора")
     void getById() {
-        Author author = new Author(1L, "test");
-        author.getBooks().add(new Book(1L, "book"));
-        assertEquals(author.toString(), dao.getById(1L).toString());
+        assertThat(em.find(Author.class, 1L)).isEqualToComparingFieldByField(dao.getById(1L));
     }
 
     @Test
     @DisplayName("возвращать список всех авторов")
     void findAll() {
-        List<Author> authors = new ArrayList<>();
-        Author author = new Author(1L, "test");
-        author.getBooks().add(new Book(1L, "book"));
-        authors.add(author);
-        Author author1 = new Author(2L, "test1");
-        author1.getBooks().add(new Book(2L, "book1"));
-        authors.add(author1);
-        assertEquals(authors.toString(), dao.findAll().toString());
+        Author author = em.find(Author.class, 1L);
+        Author author1 = em.find(Author.class, 2L);
+        List<Author> authors = dao.findAll();
+        assertThat(authors).hasSize(2).containsExactlyInAnyOrder(author, author1);
     }
 
     @Test
     @DisplayName("добавлять автора в таблицу")
     void insert() {
-        dao.insert(new Author("testInsert"));
-        Author author = new Author(3L, "testInsert");
+        dao.save(new Author("testInsert"));
+        Author author = em.find(Author.class, 3L);
         assertThat(author).isEqualToComparingFieldByField(dao.getById(3L));
     }
 
     @Test
     @DisplayName("обновлять имя автора")
     void update() {
-        Author author = new Author(2L, "update");
-        author.getBooks().add(new Book(2L, "book1"));
+        Author author = em.find(Author.class, 2L);
+        author.setName("update");
         dao.update(author);
-        assertEquals(author.toString(), dao.getById(2L).toString());
+        em.refresh(author);
+        assertEquals(author.getName(), dao.getById(2L).getName());
     }
 
     @Test
     @DisplayName("удалять автора")
     void deleteById() {
+        Author author = em.find(Author.class, 1L);
+        assertThat(author).isNotNull();
         dao.deleteById(1L);
-        assertThrows(Exception.class, () -> dao.getById(1L));
+        em.clear();
+        author = em.find(Author.class, 1L);
+        assertThat(author).isNull();
     }
 }

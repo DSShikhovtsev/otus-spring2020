@@ -1,77 +1,70 @@
 package homework2.dao;
 
-import homework2.domain.Author;
 import homework2.domain.Book;
-import homework2.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Dao для работы с книгами")
-@ExtendWith(SpringExtension.class)
-@JdbcTest
+@DataJpaTest
 @Import({BookDaoJdbc.class})
 class BookDaoJdbcTest {
 
     @Autowired
     private BookDaoJdbc dao;
 
+    @Autowired
+    private TestEntityManager em;
+
     @Test
     @DisplayName("возвращать ожидаемую книгу")
     void getById() {
-        Book book = new Book(1L, "book");
-        book.getAuthors().add(new Author(1L, "test"));
-        book.getGenres().add(new Genre(2L, "genre1"));
-        assertEquals(book.toString(), dao.getById(1L).toString());
+        assertThat(em.find(Book.class, 1L)).isEqualToComparingFieldByField(dao.getById(1L));
     }
 
     @Test
     @DisplayName("возвращать ожидаемый список книг")
     void findAll() {
-        List<Book> books = new ArrayList<>();
-        Book book = new Book(1L, "book");
-        book.getAuthors().add(new Author(1L, "test"));
-        book.getGenres().add(new Genre(2L, "genre1"));
-        books.add(book);
-        Book book1 = new Book(2L, "book1");
-        book1.getAuthors().add(new Author(2L, "test1"));
-        book1.getGenres().add(new Genre(1L, "genre"));
-        books.add(book1);
-        assertEquals(books.toString(), dao.findAll().toString());
+        Book book = em.find(Book.class, 1L);
+        Book book1 = em.find(Book.class, 2L);
+        List<Book> books = dao.findAll();
+        assertThat(books).hasSize(2).containsExactlyInAnyOrder(book, book1);
     }
 
     @Test
     @DisplayName("добавлять книгу в таблицу")
     void insert() {
-        dao.insert(new Book("test"));
-        Book book = new Book(3L, "test");
+        dao.save(new Book("test"));
+        Book book = em.find(Book.class, 3L);
         assertThat(book).isEqualToComparingFieldByField(dao.getById(3L));
     }
 
     @Test
     @DisplayName("обновлять заголовок книги")
     void update() {
-        Book book = new Book(2L, "update");
-        book.getAuthors().add(new Author(2L, "test1"));
-        book.getGenres().add(new Genre(1L, "genre"));
+        Book book = em.find(Book.class, 2L);
+        book.setTitle("test");
         dao.update(book);
-        assertEquals(book.toString(), dao.getById(2L).toString());
+        em.refresh(book);
+        assertEquals(book.getTitle(), dao.getById(2L).getTitle());
     }
 
     @Test
     @DisplayName("удалять книгу из таблицы")
     void deleteById() {
+        Book book = em.find(Book.class, 1L);
+        assertThat(book).isNotNull();
         dao.deleteById(1L);
-        assertThrows(Exception.class, () -> dao.getById(1L));
+        em.clear();
+        book = em.find(Book.class, 1L);
+        assertThat(book).isNull();
     }
 }

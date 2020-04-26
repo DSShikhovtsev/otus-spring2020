@@ -28,7 +28,7 @@ public class ShellBookCommands {
 
     @ShellMethod(value = "add book", key = {"addB", "addBook"})
     public void addBook(@ShellOption String title) {
-        bookService.putNewBook(new Book(title));
+        bookService.save(new Book(title));
     }
 
     @ShellMethod(value = "delete book by id", key = {"delB", "delBook", "deleteBook"})

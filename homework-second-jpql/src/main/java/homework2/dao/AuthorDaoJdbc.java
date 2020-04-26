@@ -2,95 +2,69 @@ package homework2.dao;
 
 import homework2.domain.Author;
 import homework2.domain.Book;
-import homework2.mapper.AuthorMapper;
-import homework2.mapper.BookMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import javax.persistence.*;
+import java.util.List;
 
+@Transactional
 @Repository
 public class AuthorDaoJdbc implements AuthorDao {
 
-    private final NamedParameterJdbcOperations jdbc;
-
-    public AuthorDaoJdbc(NamedParameterJdbcOperations jdbc) {
-        this.jdbc = jdbc;
-    }
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
-    public void insert(Author author) {
-        Map<String, Object> authorParams = new HashMap<>();
-        authorParams.put("name", author.getName());
-        jdbc.update("insert into authors(name) values(:name)", authorParams);
-        Long id = findMaxId();
-        author.getBooks().forEach(book -> insertIntoAuthorsBooks(id, book.getId()));
-    }
-
-    private Long findMaxId() {
-        return jdbc.queryForObject("select max(id) from authors", Collections.emptyMap(), Long.class);
+    public void save(Author author) {
+        if (author.getId() == null || author.getId() <= 0) {
+            em.persist(author);
+        } else {
+            em.merge(author);
+        }
     }
 
     @Override
     public void update(Author author) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", author.getId());
-        params.put("name", author.getName());
-        jdbc.update("update authors set name = :name where id = :id", params);
+        Query query = em.createQuery("update Author a " +
+                "set a.name = :name " +
+                "where a.id = :id");
+        query.setParameter("id", author.getId());
+        query.setParameter("name", author.getName());
+        query.executeUpdate();
     }
 
     @Override
     public Author getById(Long id) {
-        Author author = jdbc.queryForObject("select * from authors where id = :id", Collections.singletonMap("id", id), new AuthorMapper());
-        if (author != null) {
-            author.getBooks().addAll(findBooksByAuthorId(author.getId()));
-        }
-        return author;
+        return em.find(Author.class, id);
     }
 
     @Override
     public List<Author> findAll() {
-        List<Author> authors = jdbc.query("select * from authors", new AuthorMapper());
-        authors.forEach(t -> t.getBooks().addAll(findBooksByAuthorId(t.getId())));
-        return authors;
-    }
-
-    private List<Book> findBooksByAuthorId(Long id) {
-        return jdbc.query("select * from books where id in " +
-                "(select id_book from authors_books where id_author = :id)", Collections.singletonMap("id", id), new BookMapper());
+        TypedQuery<Author> query = em.createQuery("select a from Author a join fetch a.books", Author.class);
+        return query.getResultList();
     }
 
     @Override
     public void deleteById(Long id) {
-        deleteByAuthorId(id);
-        jdbc.update("delete from authors where id = :id", Collections.singletonMap("id", id));
+        Query query = em.createQuery("delete from Author a where a.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 
     @Override
     public void addBookByAuthorId(Long authorId, Long bookId) {
-        insertIntoAuthorsBooks(authorId, bookId);
+        Query query = em.createQuery("select b from Book b where b.id = :id");
+        query.setParameter("id", bookId);
+        Author author = getById(authorId);
+        author.getBooks().add((Book) query.getSingleResult());
+        save(author);
     }
 
     @Override
     public void deleteBookByAuthorId(Long authorId, Long bookId) {
-        deleteFromAuthorsBooks(authorId, bookId);
-    }
-
-    private void insertIntoAuthorsBooks(Long authorId, Long bookId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("authorId", authorId);
-        params.put("bookId", bookId);
-        jdbc.update("insert into authors_books(id_author, id_book) values(:authorId, :bookId)", params);
-    }
-
-    public void deleteFromAuthorsBooks(Long authorId, Long bookId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("authorId", authorId);
-        params.put("bookId", bookId);
-        jdbc.update("delete from authors_books where id_author = :authorId and id_book = :bookId", params);
-    }
-
-    private void deleteByAuthorId(Long id) {
-        jdbc.update("delete from authors_books where id_author = :authorId", Collections.singletonMap("authorId", id));
+        Author author = getById(authorId);
+        author.getBooks().removeIf(t -> t.getId().equals(bookId));
+        save(author);
     }
 }
