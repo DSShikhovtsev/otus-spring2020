@@ -16,7 +16,6 @@ public class Book {
 
     private Long id;
     private String title;
-    private List<Author> authors = new ArrayList<>();
     private List<Genre> genres = new ArrayList<>();
 
     public Book(Long id, String title) {

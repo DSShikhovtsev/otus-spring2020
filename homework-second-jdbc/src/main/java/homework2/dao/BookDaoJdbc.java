@@ -23,7 +23,6 @@ public class BookDaoJdbc implements BookDao {
     public void insert(Book book) {
         jdbc.update("insert into books(title) values(:title)", Collections.singletonMap("title", book.getTitle()));
         Long id = findMaxId();
-        book.getAuthors().forEach(t -> insertIntoAuthorsBooks(t.getId(), id));
         book.getGenres().forEach(t -> insertIntoBooksGenres(id, t.getId()));
     }
 
@@ -43,7 +42,6 @@ public class BookDaoJdbc implements BookDao {
     public Book getById(Long id) {
         Book book = jdbc.queryForObject("select * from books where id = :id", Collections.singletonMap("id", id), new BookMapper());
         if (book != null) {
-            book.getAuthors().addAll(findAuthorsByBookId(book.getId()));
             book.getGenres().addAll(findGenresByBookId(book.getId()));
         }
         return book;
@@ -52,14 +50,9 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public List<Book> findAll() {
         List<Book> books = jdbc.query("select * from books", new BookMapper());
-        List<Author> authors = jdbc.query("select * from authors where id in (select id_author from authors_books)", new AuthorMapper());
-        List<AuthorsBooks> authorsBooks = jdbc.query("select * from authors_books", new AuthorBookMapper());
         List<Genre> genres = jdbc.query("select * from genres where id in (select id_genre from books_genres)", new GenreMapper());
         List<BooksGenres> booksGenres = jdbc.query("select * from books_genres", new BookGenreMapper());
-        books.forEach(t -> {
-            t.getAuthors().addAll(findAuthorsByBookIdLocal(t.getId(), authors, authorsBooks));
-            t.getGenres().addAll(findGenresByBookIdLocal(t.getId(), genres, booksGenres));
-        });
+        books.forEach(t -> t.getGenres().addAll(findGenresByBookIdLocal(t.getId(), genres, booksGenres)));
         return books;
     }
 
@@ -90,17 +83,6 @@ public class BookDaoJdbc implements BookDao {
         jdbc.update("delete from books where id = :id", Collections.singletonMap("id", id));
     }
 
-    private List<Author> findAuthorsByBookIdLocal(Long id, List<Author> authors, List<AuthorsBooks> authorsBooks) {
-        return new ArrayList<>(authors.stream().filter(t -> {
-            for (AuthorsBooks ab : authorsBooks) {
-                if (ab.getIdBook().equals(id) && ab.getIdAuthor().equals(t.getId())) {
-                    return  true;
-                }
-            }
-            return false;
-        }).collect(Collectors.toList()));
-    }
-
     private List<Genre> findGenresByBookIdLocal(Long id, List<Genre> genres, List<BooksGenres> booksGenres) {
         return new ArrayList<>(genres.stream().filter(t -> {
             for (BooksGenres bg : booksGenres) {
@@ -110,11 +92,6 @@ public class BookDaoJdbc implements BookDao {
             }
             return false;
         }).collect(Collectors.toList()));
-    }
-
-    private List<Author> findAuthorsByBookId(Long id) {
-        return jdbc.query("select * from authors where id in " +
-                "(select id_author from authors_books where id_book = :id)", Collections.singletonMap("id", id), new AuthorMapper());
     }
 
     private List<Genre> findGenresByBookId(Long id) {
