@@ -52,11 +52,11 @@ public class BookServiceJdbc implements BookService {
 
     @Override
     public void addGenreByBookId(Long bookId, Long genreId) {
-        bookDao.addAuthorByBookId(bookId, genreId);
+        bookDao.addGenreByBookId(bookId, genreId);
     }
 
     @Override
     public void deleteGenreByBookId(Long bookId, Long genreId) {
-        bookDao.deleteAuthorByBookId(bookId, genreId);
+        bookDao.deleteGenreByBookId(bookId, genreId);
     }
 }
