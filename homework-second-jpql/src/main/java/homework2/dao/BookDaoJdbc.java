@@ -1,6 +1,5 @@
 package homework2.dao;
 
-import homework2.domain.Author;
 import homework2.domain.Book;
 import homework2.domain.Genre;
 import org.springframework.stereotype.Repository;
@@ -44,10 +43,7 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public List<Book> findAll() {
-//        List<Book> books = em.createQuery("select b from Book b join fetch b.authors", Book.class)
-//                .getResultList();
-        return em.createQuery("select b from Book b join fetch b.genres ", Book.class)//where b in :b
-//                .setParameter("b", books)
+        return em.createQuery("select b from Book b join fetch b.genres ", Book.class)
                 .getResultList();
     }
 
@@ -63,14 +59,12 @@ public class BookDaoJdbc implements BookDao {
         Query query = em.createQuery("select a from Author a where a.id = :id");
         query.setParameter("id", authorId);
         Book book = getById(bookId);
-//        book.getAuthors().add((Author) query.getSingleResult());
         save(book);
     }
 
     @Override
     public void deleteAuthorByBookId(Long bookId, Long authorId) {
         Book book = getById(bookId);
-//        book.getAuthors().removeIf(t -> t.getId().equals(authorId));
         save(book);
     }
 
