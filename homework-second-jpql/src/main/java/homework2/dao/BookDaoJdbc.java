@@ -55,20 +55,6 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public void addAuthorByBookId(Long bookId, Long authorId) {
-        Query query = em.createQuery("select a from Author a where a.id = :id");
-        query.setParameter("id", authorId);
-        Book book = getById(bookId);
-        save(book);
-    }
-
-    @Override
-    public void deleteAuthorByBookId(Long bookId, Long authorId) {
-        Book book = getById(bookId);
-        save(book);
-    }
-
-    @Override
     public void addGenreByBookId(Long bookId, Long genreId) {
         Query query = em.createQuery("select g from Genre g where g.id = :id");
         query.setParameter("id", genreId);
