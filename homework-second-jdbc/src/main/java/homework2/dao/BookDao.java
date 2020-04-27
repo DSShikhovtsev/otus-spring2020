@@ -11,8 +11,6 @@ public interface BookDao {
     Book getById(Long id);
     List<Book> findAll();
     void deleteById(Long id);
-    void addAuthorByBookId(Long bookId, Long authorId);
-    void deleteAuthorByBookId(Long bookId, Long authorId);
     void addGenreByBookId(Long bookId, Long genreId);
     void deleteGenreByBookId(Long bookId, Long genreId);
 }

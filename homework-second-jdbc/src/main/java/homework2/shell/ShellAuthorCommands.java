@@ -4,7 +4,6 @@ import homework2.domain.Author;
 import homework2.service.AuthorService;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
@@ -43,11 +42,11 @@ public class ShellAuthorCommands {
 
     @ShellMethod(value = "add book to Author by ids", key = {"addBtA", "addBookToAuthor"})
     public void addBookToAuthor(@ShellOption Long authorId, @ShellOption Long bookId) {
-        authorService.addBookByAuthorId(authorId, bookId);
+        authorService.addBookToAuthor(authorId, bookId);
     }
 
     @ShellMethod(value = "delete book from Author by ids", key = {"delBfA", "delBookFromAuthor"})
     public void deleteBookFromAuthor(@ShellOption Long authorId, @ShellOption Long bookId) {
-        authorService.deleteBookByAuthorId(authorId, bookId);
+        authorService.deleteBookFromAuthor(authorId, bookId);
     }
 }

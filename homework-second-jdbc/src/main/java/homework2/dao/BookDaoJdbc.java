@@ -57,16 +57,6 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public void addAuthorByBookId(Long bookId, Long authorId) {
-        insertIntoAuthorsBooks(authorId, bookId);
-    }
-
-    @Override
-    public void deleteAuthorByBookId(Long bookId, Long authorId) {
-        deleteFromAuthorsBooks(authorId, bookId);
-    }
-
-    @Override
     public void addGenreByBookId(Long bookId, Long genreId) {
         insertIntoBooksGenres(bookId, genreId);
     }
@@ -99,20 +89,6 @@ public class BookDaoJdbc implements BookDao {
                 " (select id_genre from books_genres where id_book = :id)", Collections.singletonMap("id", id), new GenreMapper());
     }
 
-    private void insertIntoAuthorsBooks(Long authorId, Long bookId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("authorId", authorId);
-        params.put("bookId", bookId);
-        jdbc.update("insert into authors_books(id_author, id_book) values(:authorId, :bookId)", params);
-    }
-
-    public void deleteFromAuthorsBooks(Long authorId, Long bookId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("authorId", authorId);
-        params.put("bookId", bookId);
-        jdbc.update("delete from authors_books where id_author = :authorId and id_book = :bookId", params);
-    }
-
     private void deleteFromAuthorsBooksByBookId(Long id) {
         jdbc.update("delete from authors_books where id_book = :bookId", Collections.singletonMap("bookId", id));
     }
@@ -121,7 +97,7 @@ public class BookDaoJdbc implements BookDao {
         Map<String, Object> params = new HashMap<>();
         params.put("bookId", bookId);
         params.put("genreId", genreId);
-        jdbc.update("insert into authors_books(id_book, id_genre) values(:bookId, :genreId)", params);
+        jdbc.update("insert into books_genres(id_book, id_genre) values(:bookId, :genreId)", params);
     }
 
     private void deleteFromBooksGenres(Long bookId, Long genreId) {

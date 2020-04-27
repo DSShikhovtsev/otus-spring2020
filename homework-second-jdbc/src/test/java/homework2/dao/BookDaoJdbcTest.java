@@ -1,6 +1,5 @@
 package homework2.dao;
 
-import homework2.domain.Author;
 import homework2.domain.Book;
 import homework2.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +29,6 @@ class BookDaoJdbcTest {
     @DisplayName("возвращать ожидаемую книгу")
     void getById() {
         Book book = new Book(1L, "book");
-        book.getAuthors().add(new Author(1L, "test"));
         book.getGenres().add(new Genre(2L, "genre1"));
         assertEquals(book.toString(), dao.getById(1L).toString());
     }
@@ -40,11 +38,9 @@ class BookDaoJdbcTest {
     void findAll() {
         List<Book> books = new ArrayList<>();
         Book book = new Book(1L, "book");
-        book.getAuthors().add(new Author(1L, "test"));
         book.getGenres().add(new Genre(2L, "genre1"));
         books.add(book);
         Book book1 = new Book(2L, "book1");
-        book1.getAuthors().add(new Author(2L, "test1"));
         book1.getGenres().add(new Genre(1L, "genre"));
         books.add(book1);
         assertEquals(books.toString(), dao.findAll().toString());
@@ -62,7 +58,6 @@ class BookDaoJdbcTest {
     @DisplayName("обновлять заголовок книги")
     void update() {
         Book book = new Book(2L, "update");
-        book.getAuthors().add(new Author(2L, "test1"));
         book.getGenres().add(new Genre(1L, "genre"));
         dao.update(book);
         assertEquals(book.toString(), dao.getById(2L).toString());

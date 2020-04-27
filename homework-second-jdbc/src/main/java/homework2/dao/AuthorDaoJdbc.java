@@ -67,12 +67,12 @@ public class AuthorDaoJdbc implements AuthorDao {
     }
 
     @Override
-    public void addBookByAuthorId(Long authorId, Long bookId) {
+    public void addBookToAuthor(Long authorId, Long bookId) {
         insertIntoAuthorsBooks(authorId, bookId);
     }
 
     @Override
-    public void deleteBookByAuthorId(Long authorId, Long bookId) {
+    public void deleteBookFromAuthor(Long authorId, Long bookId) {
         deleteFromAuthorsBooks(authorId, bookId);
     }
 

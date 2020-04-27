@@ -75,7 +75,7 @@ class AuthorServiceJdbcTest {
     @DisplayName("добавлять книгу к автору")
     void addBookByAuthorId() {
         Book book = new Book(1L, "book");
-        service.addBookByAuthorId(2L, 1L);
+        service.addBookToAuthor(2L, 1L);
         assertThat(book).isEqualToComparingFieldByField(service.getAuthorById(2L).getBooks().get(0));
     }
 
@@ -83,7 +83,7 @@ class AuthorServiceJdbcTest {
     @DisplayName("удалять книгу из автора")
     void deleteBookByAuthorId() {
         Book book = new Book(1L, "book");
-        service.deleteBookByAuthorId(1L, 1L);
+        service.deleteBookFromAuthor(1L, 1L);
         assertFalse(service.getAuthorById(1L).getBooks().contains(book));
     }
 }
