@@ -4,7 +4,10 @@ import homework2.domain.Author;
 import homework2.domain.Book;
 import homework2.mapper.AuthorMapper;
 import homework2.mapper.BookMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -20,15 +23,12 @@ public class AuthorDaoJdbc implements AuthorDao {
 
     @Override
     public void insert(Author author) {
-        Map<String, Object> authorParams = new HashMap<>();
-        authorParams.put("name", author.getName());
-        jdbc.update("insert into authors(name) values(:name)", authorParams);
-        Long id = findMaxId();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource map = new MapSqlParameterSource()
+                .addValue("name", author.getName());
+        jdbc.update("insert into authors(name) values(:name)", map, keyHolder, new String[]{"id"});
+        Long id = (Long) keyHolder.getKeys().get("id");
         author.getBooks().forEach(book -> insertIntoAuthorsBooks(id, book.getId()));
-    }
-
-    private Long findMaxId() {
-        return jdbc.queryForObject("select max(id) from authors", Collections.emptyMap(), Long.class);
     }
 
     @Override

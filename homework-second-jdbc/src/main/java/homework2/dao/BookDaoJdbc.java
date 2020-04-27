@@ -4,7 +4,10 @@ import homework2.domain.*;
 import homework2.entityReference.AuthorsBooks;
 import homework2.entityReference.BooksGenres;
 import homework2.mapper.*;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -21,13 +24,12 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public void insert(Book book) {
-        jdbc.update("insert into books(title) values(:title)", Collections.singletonMap("title", book.getTitle()));
-        Long id = findMaxId();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource map = new MapSqlParameterSource()
+                .addValue("title", book.getTitle());
+        jdbc.update("insert into books(title) values(:title)", map, keyHolder, new String[]{"id"});
+        Long id = (Long) keyHolder.getKeys().get("id");
         book.getGenres().forEach(t -> insertIntoBooksGenres(id, t.getId()));
-    }
-
-    private Long findMaxId() {
-        return jdbc.queryForObject("select max(id) from books", Collections.emptyMap(), Long.class);
     }
 
     @Override
