@@ -11,6 +11,4 @@ public interface AuthorDao {
     Author getById(Long id);
     List<Author> findAll();
     void deleteById(Long id);
-    void addBookByAuthorId(Long authorId, Long bookId);
-    void deleteBookByAuthorId(Long authorId, Long bookId);
 }

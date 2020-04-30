@@ -49,20 +49,4 @@ public class AuthorDaoJdbc implements AuthorDao {
         query.setParameter("id", id);
         query.executeUpdate();
     }
-
-    @Override
-    public void addBookByAuthorId(Long authorId, Long bookId) {
-        Query query = em.createQuery("select b from Book b where b.id = :id");
-        query.setParameter("id", bookId);
-        Author author = getById(authorId);
-        author.getBooks().add((Book) query.getSingleResult());
-        save(author);
-    }
-
-    @Override
-    public void deleteBookByAuthorId(Long authorId, Long bookId) {
-        Author author = getById(authorId);
-        author.getBooks().removeIf(t -> t.getId().equals(bookId));
-        save(author);
-    }
 }

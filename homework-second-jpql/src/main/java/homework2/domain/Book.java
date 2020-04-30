@@ -22,6 +22,12 @@ public class Book {
     private String title;
 
     @BatchSize(size = 10)
+    @ManyToMany(targetEntity = Author.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "authors_books", joinColumns = @JoinColumn(name = "id_book"),
+            inverseJoinColumns = @JoinColumn(name = "id_author"))
+    private List<Author> authors = new ArrayList<>();
+
+    @BatchSize(size = 10)
     @ManyToMany(targetEntity = Genre.class, fetch = FetchType.LAZY)
     @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "id_book"),
             inverseJoinColumns = @JoinColumn(name = "id_genre"))

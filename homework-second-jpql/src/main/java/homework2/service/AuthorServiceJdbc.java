@@ -45,16 +45,4 @@ public class AuthorServiceJdbc implements AuthorService {
     public void deleteAuthorById(Long id) {
         authorDao.deleteById(id);
     }
-
-    @Transactional
-    @Override
-    public void addBookByAuthorId(Long authorId, Long bookId) {
-        authorDao.addBookByAuthorId(authorId, bookId);
-    }
-
-    @Transactional
-    @Override
-    public void deleteBookByAuthorId(Long authorId, Long bookId) {
-        authorDao.deleteBookByAuthorId(authorId, bookId);
-    }
 }

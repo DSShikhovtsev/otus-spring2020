@@ -48,13 +48,25 @@ public class BookServiceJdbc implements BookService {
 
     @Transactional
     @Override
-    public void addGenreByBookId(Long bookId, Long genreId) {
-        bookDao.addGenreByBookId(bookId, genreId);
+    public void addAuthorToBook(Long bookId, Long authorId) {
+        bookDao.addAuthorToBook(bookId, authorId);
     }
 
     @Transactional
     @Override
-    public void deleteGenreByBookId(Long bookId, Long genreId) {
-        bookDao.deleteGenreByBookId(bookId, genreId);
+    public void deleteAuthorFromBook(Long bookId, Long authorId) {
+        bookDao.deleteAuthorFromBook(bookId, authorId);
+    }
+
+    @Transactional
+    @Override
+    public void addGenreToBook(Long bookId, Long genreId) {
+        bookDao.addGenreToBook(bookId, genreId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteGenreFromBook(Long bookId, Long genreId) {
+        bookDao.deleteGenreFromBook(bookId, genreId);
     }
 }

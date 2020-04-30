@@ -21,17 +21,6 @@ public class Author {
     @Column(name = "name")
     private String name;
 
-    @BatchSize(size = 10)
-    @ManyToMany(targetEntity = Book.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "authors_books", joinColumns = @JoinColumn(name = "id_author"),
-            inverseJoinColumns = @JoinColumn(name = "id_book"))
-    private List<Book> books = new ArrayList<>();
-
-    public Author(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public Author(String name) {
         this.name = name;
     }

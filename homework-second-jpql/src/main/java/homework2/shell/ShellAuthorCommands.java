@@ -39,14 +39,4 @@ public class ShellAuthorCommands {
     public void updateAuthor(@ShellOption Long id, @ShellOption String name) {
         authorService.updateAuthor(new Author(id, name));
     }
-
-    @ShellMethod(value = "add book to Author by ids", key = {"addBtA", "addBookToAuthor"})
-    public void addBookToAuthor(@ShellOption Long authorId, @ShellOption Long bookId) {
-        authorService.addBookByAuthorId(authorId, bookId);
-    }
-
-    @ShellMethod(value = "delete book from Author by ids", key = {"delBfA", "delBookFromAuthor"})
-    public void deleteBookFromAuthor(@ShellOption Long authorId, @ShellOption Long bookId) {
-        authorService.deleteBookByAuthorId(authorId, bookId);
-    }
 }

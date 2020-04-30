@@ -1,5 +1,6 @@
 package homework2.dao;
 
+import homework2.domain.Author;
 import homework2.domain.Book;
 import homework2.domain.Genre;
 import org.springframework.stereotype.Repository;
@@ -53,14 +54,28 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public void addGenreByBookId(Long bookId, Long genreId) {
+    public void addAuthorToBook(Long bookId, Long authorId) {
+        Book book = getById(bookId);
+        book.getAuthors().add(em.find(Author.class, authorId));
+        save(book);
+    }
+
+    @Override
+    public void deleteAuthorFromBook(Long bookId, Long authorId) {
+        Book book = getById(bookId);
+        book.getAuthors().removeIf(t -> t.getId().equals(authorId));
+        save(book);
+    }
+
+    @Override
+    public void addGenreToBook(Long bookId, Long genreId) {
         Book book = getById(bookId);
         book.getGenres().add(em.find(Genre.class, genreId));
         save(book);
     }
 
     @Override
-    public void deleteGenreByBookId(Long bookId, Long genreId) {
+    public void deleteGenreFromBook(Long bookId, Long genreId) {
         Book book = getById(bookId);
         book.getGenres().removeIf(t -> t.getId().equals(genreId));
         save(book);
