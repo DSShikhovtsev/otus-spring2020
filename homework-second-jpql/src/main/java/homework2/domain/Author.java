@@ -21,7 +21,7 @@ public class Author {
     @Column(name = "name")
     private String name;
 
-    @BatchSize(size = 5)
+    @BatchSize(size = 10)
     @ManyToMany(targetEntity = Book.class, fetch = FetchType.LAZY)
     @JoinTable(name = "authors_books", joinColumns = @JoinColumn(name = "id_author"),
             inverseJoinColumns = @JoinColumn(name = "id_book"))

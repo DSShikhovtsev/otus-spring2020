@@ -3,14 +3,12 @@ package homework2.dao;
 import homework2.domain.Book;
 import homework2.domain.Genre;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
 
-@Transactional
 @Repository
 public class BookDaoJdbc implements BookDao {
 
@@ -56,10 +54,8 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public void addGenreByBookId(Long bookId, Long genreId) {
-        Query query = em.createQuery("select g from Genre g where g.id = :id");
-        query.setParameter("id", genreId);
         Book book = getById(bookId);
-        book.getGenres().add((Genre) query.getSingleResult());
+        book.getGenres().add(em.find(Genre.class, genreId));
         save(book);
     }
 

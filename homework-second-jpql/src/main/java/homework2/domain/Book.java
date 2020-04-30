@@ -21,9 +21,10 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-
-    @OneToMany(targetEntity = Genre.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id")
+    @BatchSize(size = 10)
+    @ManyToMany(targetEntity = Genre.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "id_book"),
+            inverseJoinColumns = @JoinColumn(name = "id_genre"))
     private List<Genre> genres = new ArrayList<>();
 
     public Book(Long id, String title) {

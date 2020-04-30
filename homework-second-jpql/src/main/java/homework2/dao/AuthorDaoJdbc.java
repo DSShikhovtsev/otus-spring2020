@@ -3,12 +3,10 @@ package homework2.dao;
 import homework2.domain.Author;
 import homework2.domain.Book;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Transactional
 @Repository
 public class AuthorDaoJdbc implements AuthorDao {
 
@@ -41,7 +39,7 @@ public class AuthorDaoJdbc implements AuthorDao {
 
     @Override
     public List<Author> findAll() {
-        TypedQuery<Author> query = em.createQuery("select a from Author a join fetch a.books", Author.class);
+        TypedQuery<Author> query = em.createQuery("select a from Author a", Author.class);
         return query.getResultList();
     }
 
