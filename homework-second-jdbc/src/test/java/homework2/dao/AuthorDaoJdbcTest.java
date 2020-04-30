@@ -29,7 +29,6 @@ class AuthorDaoJdbcTest {
     @DisplayName("возвращать ожидаемого автора")
     void getById() {
         Author author = new Author(1L, "test");
-        author.getBooks().add(new Book(1L, "book"));
         assertEquals(author.toString(), dao.getById(1L).toString());
     }
 
@@ -38,10 +37,8 @@ class AuthorDaoJdbcTest {
     void findAll() {
         List<Author> authors = new ArrayList<>();
         Author author = new Author(1L, "test");
-        author.getBooks().add(new Book(1L, "book"));
         authors.add(author);
         Author author1 = new Author(2L, "test1");
-        author1.getBooks().add(new Book(2L, "book1"));
         authors.add(author1);
         assertEquals(authors.toString(), dao.findAll().toString());
     }
@@ -58,7 +55,6 @@ class AuthorDaoJdbcTest {
     @DisplayName("обновлять имя автора")
     void update() {
         Author author = new Author(2L, "update");
-        author.getBooks().add(new Book(2L, "book1"));
         dao.update(author);
         assertEquals(author.toString(), dao.getById(2L).toString());
     }

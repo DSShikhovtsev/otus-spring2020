@@ -36,7 +36,6 @@ public class GenreDaoJdbc implements GenreDao {
 
     @Override
     public void deleteById(Long id) {
-        deleteByGenreId(id);
         jdbc.update("delete from genres where id = :id", Collections.singletonMap("id", id));
     }
 
@@ -46,9 +45,5 @@ public class GenreDaoJdbc implements GenreDao {
         params.put("id", genre.getId());
         params.put("description", genre.getDescription());
         jdbc.update("update genres set description = :description where id = :id", params);
-    }
-
-    private void deleteByGenreId(Long id) {
-        jdbc.update("delete from books_genres where id_genre = :genreId", Collections.singletonMap("genreId", id));
     }
 }

@@ -30,7 +30,6 @@ class AuthorServiceJdbcTest {
     @DisplayName("возвращать ожидаемого автора")
     void getAuthorById() {
         Author author = new Author(1L, "test");
-        author.getBooks().add(new Book(1L, "book"));
         assertEquals(author.toString(), service.getAuthorById(1L).toString());
     }
 
@@ -39,10 +38,8 @@ class AuthorServiceJdbcTest {
     void getAllAuthors() {
         List<Author> authors = new ArrayList<>();
         Author author = new Author(1L, "test");
-        author.getBooks().add(new Book(1L, "book"));
         authors.add(author);
         Author author1 = new Author(2L, "test1");
-        author1.getBooks().add(new Book(2L, "book1"));
         authors.add(author1);
         assertEquals(authors.toString(), service.getAllAuthors().toString());
     }
@@ -59,7 +56,6 @@ class AuthorServiceJdbcTest {
     @DisplayName("обновлять имя автора")
     void updateAuthor() {
         Author author = new Author(2L, "update");
-        author.getBooks().add(new Book(2L, "book1"));
         service.updateAuthor(author);
         assertEquals(author.toString(), service.getAuthorById(2L).toString());
     }
@@ -69,21 +65,5 @@ class AuthorServiceJdbcTest {
     void deleteAuthorById() {
         service.deleteAuthorById(1L);
         assertThrows(Exception.class, () -> service.getAuthorById(1L));
-    }
-
-    @Test
-    @DisplayName("добавлять книгу к автору")
-    void addBookByAuthorId() {
-        Book book = new Book(1L, "book");
-        service.addBookToAuthor(2L, 1L);
-        assertThat(book).isEqualToComparingFieldByField(service.getAuthorById(2L).getBooks().get(0));
-    }
-
-    @Test
-    @DisplayName("удалять книгу из автора")
-    void deleteBookByAuthorId() {
-        Book book = new Book(1L, "book");
-        service.deleteBookFromAuthor(1L, 1L);
-        assertFalse(service.getAuthorById(1L).getBooks().contains(book));
     }
 }

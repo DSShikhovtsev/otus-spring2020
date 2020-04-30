@@ -41,6 +41,16 @@ public class BookServiceJdbc implements BookService {
     }
 
     @Override
+    public void addAuthorByBookId(Long bookId, Long authorId) {
+        bookDao.addAuthorByBookId(bookId, authorId);
+    }
+
+    @Override
+    public void deleteAuthorByBookId(Long bookId, Long authorId) {
+        bookDao.deleteAuthorByBookId(bookId, authorId);
+    }
+
+    @Override
     public void addGenreByBookId(Long bookId, Long genreId) {
         bookDao.addGenreByBookId(bookId, genreId);
     }

@@ -16,12 +16,6 @@ public class Author {
 
     private Long id;
     private String name;
-    private List<Book> books = new ArrayList<>();
-
-    public Author(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 
     public Author(String name) {
         this.name = name;

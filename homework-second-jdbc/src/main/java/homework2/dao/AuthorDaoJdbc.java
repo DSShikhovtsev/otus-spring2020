@@ -23,12 +23,7 @@ public class AuthorDaoJdbc implements AuthorDao {
 
     @Override
     public void insert(Author author) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        MapSqlParameterSource map = new MapSqlParameterSource()
-                .addValue("name", author.getName());
-        jdbc.update("insert into authors(name) values(:name)", map, keyHolder, new String[]{"id"});
-        Long id = (Long) keyHolder.getKeys().get("id");
-        author.getBooks().forEach(book -> insertIntoAuthorsBooks(id, book.getId()));
+        jdbc.update("insert into authors(name) values(:name)", Collections.singletonMap("name", author.getName()));
     }
 
     @Override
@@ -41,28 +36,16 @@ public class AuthorDaoJdbc implements AuthorDao {
 
     @Override
     public Author getById(Long id) {
-        Author author = jdbc.queryForObject("select * from authors where id = :id", Collections.singletonMap("id", id), new AuthorMapper());
-        if (author != null) {
-            author.getBooks().addAll(findBooksByAuthorId(author.getId()));
-        }
-        return author;
+        return jdbc.queryForObject("select * from authors where id = :id", Collections.singletonMap("id", id), new AuthorMapper());
     }
 
     @Override
     public List<Author> findAll() {
-        List<Author> authors = jdbc.query("select * from authors", new AuthorMapper());
-        authors.forEach(t -> t.getBooks().addAll(findBooksByAuthorId(t.getId())));
-        return authors;
-    }
-
-    private List<Book> findBooksByAuthorId(Long id) {
-        return jdbc.query("select * from books where id in " +
-                "(select id_book from authors_books where id_author = :id)", Collections.singletonMap("id", id), new BookMapper());
+        return jdbc.query("select * from authors", new AuthorMapper());
     }
 
     @Override
     public void deleteById(Long id) {
-        deleteByAuthorId(id);
         jdbc.update("delete from authors where id = :id", Collections.singletonMap("id", id));
     }
 
@@ -88,9 +71,5 @@ public class AuthorDaoJdbc implements AuthorDao {
         params.put("authorId", authorId);
         params.put("bookId", bookId);
         jdbc.update("delete from authors_books where id_author = :authorId and id_book = :bookId", params);
-    }
-
-    private void deleteByAuthorId(Long id) {
-        jdbc.update("delete from authors_books where id_author = :authorId", Collections.singletonMap("authorId", id));
     }
 }

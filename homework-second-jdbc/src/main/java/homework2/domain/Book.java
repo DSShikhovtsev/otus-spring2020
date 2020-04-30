@@ -17,6 +17,7 @@ public class Book {
     private Long id;
     private String title;
     private List<Genre> genres = new ArrayList<>();
+    private List<Author> authors = new ArrayList<>();
 
     public Book(Long id, String title) {
         this.id = id;
