@@ -1,43 +1,41 @@
 package homework2.shell;
 
-import homework2.domain.Book;
-import homework2.service.BookService;
+import homework2.service.BookUtilService;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
 public class ShellBookCommands {
 
-    private final BookService bookService;
+    private final BookUtilService bookService;
 
-    public ShellBookCommands(BookService bookService) {
+    public ShellBookCommands(BookUtilService bookService) {
         this.bookService = bookService;
     }
 
     @ShellMethod(value = "show books", key = {"shB", "showBooks"})
     public void showBooks() {
-        bookService.getAllBooks().forEach(System.out::println);
+        bookService.showAll();
     }
 
     @ShellMethod(value = "show book by id", key = {"sB", "showBook"})
     public void showBook(@ShellOption Long id) {
-        System.out.println(bookService.getBookById(id));
+        bookService.showInstance(id);
     }
 
     @ShellMethod(value = "add book", key = {"addB", "addBook"})
     public void addBook(@ShellOption String title) {
-        bookService.save(new Book(title));
+        bookService.add(title);
     }
 
     @ShellMethod(value = "delete book by id", key = {"delB", "delBook", "deleteBook"})
     public void deleteBook(@ShellOption Long id) {
-        bookService.deleteBookById(id);
+        bookService.delete(id);
     }
 
     @ShellMethod(value = "update Book title by id", key = {"updB", "updBook", "updateBook"})
     public void updateBook(@ShellOption Long id, @ShellOption String title) {
-        bookService.updateBook(new Book(id, title));
+        bookService.update(id, title);
     }
 }
