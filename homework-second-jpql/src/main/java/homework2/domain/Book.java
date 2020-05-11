@@ -2,6 +2,7 @@ package homework2.domain;
 
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,6 +33,12 @@ public class Book {
     @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "id_book"),
             inverseJoinColumns = @JoinColumn(name = "id_genre"))
     private List<Genre> genres = new ArrayList<>();
+
+    @BatchSize(size = 10)
+    @OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "books_comments", joinColumns = @JoinColumn(name = "id_book"),
+            inverseJoinColumns = @JoinColumn(name = "id_comment"))
+    private List<Comment> comments = new ArrayList<>();
 
     public Book(Long id, String title) {
         this.id = id;

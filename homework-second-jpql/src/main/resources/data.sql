@@ -20,6 +20,15 @@ insert into genres(description) values
     ('Legend'),
     ('Animals');
 
+insert into comments(comment) values
+    ('Comment 1'),
+    ('Comment 2'),
+    ('Comment 3'),
+    ('Comment 4'),
+    ('Comment 5'),
+    ('Comment 6'),
+    ('Comment 7');
+
 insert into authors_books(id_author, id_book) values
     ((SELECT id FROM authors WHERE name = 'Petya'), (SELECT id FROM books WHERE title = 'About Stalin')),
     ((SELECT id FROM authors WHERE name = 'Petya'), (SELECT id FROM books WHERE title = 'About magic')),
@@ -55,3 +64,12 @@ insert into books_genres(id_book, id_genre) values
     ((SELECT id FROM books WHERE title = 'About magic'), (SELECT id FROM genres WHERE description = 'Mystic')),
     ((SELECT id FROM books WHERE title = 'About cook'), (SELECT id FROM genres WHERE description = 'Nature')),
     ((SELECT id FROM books WHERE title = 'About cook'), (SELECT id FROM genres WHERE description = 'Animals'));
+
+insert into books_comments(id_book, id_comment) values
+    ((SELECT id FROM books WHERE title = 'About sea'), (SELECT id FROM comments WHERE comment = 'Comment 1')),
+    ((SELECT id FROM books WHERE title = 'About cook'), (SELECT id FROM comments WHERE comment = 'Comment 2')),
+    ((SELECT id FROM books WHERE title = 'About magic'), (SELECT id FROM comments WHERE comment = 'Comment 3')),
+    ((SELECT id FROM books WHERE title = 'About Witcher'), (SELECT id FROM comments WHERE comment = 'Comment 4')),
+    ((SELECT id FROM books WHERE title = 'About Witcher'), (SELECT id FROM comments WHERE comment = 'Comment 5')),
+    ((SELECT id FROM books WHERE title = 'About Witcher'), (SELECT id FROM comments WHERE comment = 'Comment 6')),
+    ((SELECT id FROM books WHERE title = 'About sea'), (SELECT id FROM comments WHERE comment = 'Comment 7'));
