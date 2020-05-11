@@ -35,6 +35,12 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "id_genre"))
     private List<Genre> genres = new ArrayList<>();
 
+    @BatchSize(size = 10)
+    @OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "books_comments", joinColumns = @JoinColumn(name = "id_book"),
+            inverseJoinColumns = @JoinColumn(name = "id_comment"))
+    private List<Comment> comments = new ArrayList<>();
+
     public Book(Long id, String title) {
         this.id = id;
         this.title = title;
