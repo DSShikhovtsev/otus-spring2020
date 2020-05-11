@@ -42,7 +42,7 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public List<Book> findAll() {
-        return em.createQuery("select b from Book b join fetch b.genres ", Book.class)
+        return em.createQuery("select b from Book b", Book.class)
                 .getResultList();
     }
 
