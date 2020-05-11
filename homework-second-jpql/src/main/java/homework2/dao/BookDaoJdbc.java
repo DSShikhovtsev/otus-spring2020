@@ -2,6 +2,7 @@ package homework2.dao;
 
 import homework2.domain.Author;
 import homework2.domain.Book;
+import homework2.domain.Comment;
 import homework2.domain.Genre;
 import org.springframework.stereotype.Repository;
 

@@ -10,6 +10,10 @@ insert into genres(description) values
     ('genre'),
     ('genre1');
 
+insert into comments(comment) values
+    ('comment'),
+    ('comment1');
+
 insert into authors_books(id_author, id_book) values
     (1, 1),
     (2, 2);
@@ -17,3 +21,7 @@ insert into authors_books(id_author, id_book) values
 insert into books_genres(id_book, id_genre) values
     (1, 2),
     (2, 1);
+
+insert into books_comments(id_book, id_comment) values
+    (1, 1),
+    (2, 2);
