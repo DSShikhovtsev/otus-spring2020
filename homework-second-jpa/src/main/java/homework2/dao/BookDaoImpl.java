@@ -1,21 +1,21 @@
 package homework2.dao;
 
-import homework2.domain.Author;
 import homework2.domain.Book;
-import homework2.domain.Genre;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BookDaoImpl implements BookRepositoryCustom {
 
-    @PersistenceContext
-    private EntityManager em;
+    @Autowired
+    private BookDao bookDao;
+    @Autowired
+    private AuthorDao authorDao;
+    @Autowired
+    private GenreDao genreDao;
 
     @Override
     public void addAuthorToBook(Long bookId, Long authorId) {
         Book book = getById(bookId);
-        book.getAuthors().add(em.find(Author.class, authorId));
+        book.getAuthors().add(authorDao.findById(authorId).orElse(null));
         save(book);
     }
 
@@ -29,7 +29,7 @@ public class BookDaoImpl implements BookRepositoryCustom {
     @Override
     public void addGenreToBook(Long bookId, Long genreId) {
         Book book = getById(bookId);
-        book.getGenres().add(em.find(Genre.class, genreId));
+        book.getGenres().add(genreDao.findById(genreId).get());
         save(book);
     }
 
@@ -41,14 +41,10 @@ public class BookDaoImpl implements BookRepositoryCustom {
     }
 
     private void save(Book book) {
-        if (book.getId() == null || book.getId() <= 0) {
-            em.persist(book);
-        } else {
-            em.merge(book);
-        }
+        bookDao.save(book);
     }
 
     private Book getById(Long id) {
-        return em.find(Book.class, id);
+        return bookDao.findById(id).get();
     }
 }

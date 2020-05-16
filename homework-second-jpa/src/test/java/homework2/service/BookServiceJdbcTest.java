@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -20,13 +22,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Service для работы с книгами")
-@DataJpaTest
-@RunWith(SpringRunner.class)
+@SpringBootTest
 @Import({BookServiceJdbc.class})
 class BookServiceJdbcTest {
 
-    @Autowired
-    @InjectMocks
+    @MockBean
     private BookServiceJdbc service;
 
     @Test
@@ -35,7 +35,6 @@ class BookServiceJdbcTest {
         Book book = new Book(1L, "book");
         book.getAuthors().add(new Author(1L, "test"));
         book.getGenres().add(new Genre(2L, "genre1"));
-        book.getComments().add(new Comment(1L, "comment"));
         assertThat(book).isEqualToComparingFieldByField(service.getBookById(1L));
     }
 
@@ -46,12 +45,10 @@ class BookServiceJdbcTest {
         Book book = new Book(1L, "book");
         book.getAuthors().add(new Author(1L, "test"));
         book.getGenres().add(new Genre(2L, "genre1"));
-        book.getComments().add(new Comment(1L, "comment"));
         books.add(book);
         Book book1 = new Book(2L, "book1");
         book1.getAuthors().add(new Author(2L, "test1"));
         book1.getGenres().add(new Genre(1L, "genre"));
-        book1.getComments().add(new Comment(2L, "comment1"));
         books.add(book1);
         assertEquals(books.toString(), service.getAllBooks().toString());
     }

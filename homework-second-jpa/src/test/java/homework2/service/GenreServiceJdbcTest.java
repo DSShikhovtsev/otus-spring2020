@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
@@ -14,12 +16,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Service для работы с жанрами")
-@DataJpaTest
+@SpringBootTest
 @Import({GenreServiceJdbc.class})
 class GenreServiceJdbcTest {
 
-    @Autowired
-    @InjectMocks
+    @MockBean
     private GenreServiceJdbc service;
 
     @Test

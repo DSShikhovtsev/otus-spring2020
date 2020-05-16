@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Dao для работы с книгами")
-@RunWith(SpringRunner.class)
 @DataJpaTest
 class BookDaoJdbcTest {
 
@@ -31,7 +30,6 @@ class BookDaoJdbcTest {
         Book book = new Book(1L, "book");
         book.getAuthors().add(new Author(1L, "test"));
         book.getGenres().add(new Genre(2L, "genre1"));
-        book.getComments().add(new Comment(1L, "comment"));
         assertThat(book).isEqualToComparingFieldByField(dao.findById(1L).get());
     }
 
@@ -42,12 +40,10 @@ class BookDaoJdbcTest {
         Book book = new Book(1L, "book");
         book.getAuthors().add(new Author(1L, "test"));
         book.getGenres().add(new Genre(2L, "genre1"));
-        book.getComments().add(new Comment(1L, "comment"));
         books.add(book);
         Book book1 = new Book(2L, "book1");
         book1.getAuthors().add(new Author(2L, "test1"));
         book1.getGenres().add(new Genre(1L, "genre"));
-        book1.getComments().add(new Comment(2L, "comment1"));
         books.add(book1);
         assertEquals(books.toString(), dao.findAll().toString());
     }

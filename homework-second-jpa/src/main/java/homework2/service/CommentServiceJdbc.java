@@ -22,8 +22,8 @@ public class CommentServiceJdbc implements CommentService {
     @Transactional
     @Override
     public void addComment(Long bookId, Comment comment) {
-        Book book = bookService.getBookById(bookId);
-        book.getComments().add(dao.save(comment));
+        comment.setBook(bookService.getBookById(bookId));
+        dao.save(comment);
     }
 
     @Transactional
