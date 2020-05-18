@@ -1,16 +1,20 @@
 package homework2.dao;
 
 import homework2.domain.Book;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-public class BookDaoImpl implements BookRepositoryCustom {
+@Repository
+public class BookDaoCustomImpl implements BookDaoCustom {
 
-    @Autowired
-    private BookDao bookDao;
-    @Autowired
-    private AuthorDao authorDao;
-    @Autowired
-    private GenreDao genreDao;
+    private final BookDao bookDao;
+    private final AuthorDao authorDao;
+    private final GenreDao genreDao;
+
+    public BookDaoCustomImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao) {
+        this.bookDao = bookDao;
+        this.authorDao = authorDao;
+        this.genreDao = genreDao;
+    }
 
     @Override
     public void addAuthorToBook(Long bookId, Long authorId) {

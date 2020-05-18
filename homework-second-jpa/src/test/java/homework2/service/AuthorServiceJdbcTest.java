@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Service для работы с авторами")
 @SpringBootTest
-@Import({AuthorServiceJdbc.class})
 class AuthorServiceJdbcTest {
 
     @MockBean

@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Service для работы с комментариями")
 @SpringBootTest
-@Import({CommentServiceJdbc.class, BookServiceJdbc.class})
 class CommentServiceJdbcTest {
 
     @MockBean

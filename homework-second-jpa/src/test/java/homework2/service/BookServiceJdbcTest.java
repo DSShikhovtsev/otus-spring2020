@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Service для работы с книгами")
 @SpringBootTest
-@Import({BookServiceJdbc.class})
 class BookServiceJdbcTest {
 
     @MockBean

@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Service для работы с жанрами")
 @SpringBootTest
-@Import({GenreServiceJdbc.class})
 class GenreServiceJdbcTest {
 
     @MockBean
