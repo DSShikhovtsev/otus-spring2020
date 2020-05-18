@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Author {
 
     @Id
-    private Long id;
+    private String id;
 
     @Field(name = "name")
     private String name;

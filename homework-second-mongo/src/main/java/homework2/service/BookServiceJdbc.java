@@ -24,8 +24,8 @@ public class BookServiceJdbc implements BookService {
 
     @Transactional(readOnly = true)
     @Override
-    public Book getBookById(Long id) {
-        return bookDao.findById(id).orElse(null);
+    public Book getBookById(String id) {
+        return bookDao.findById(id);
     }
 
     @Transactional(readOnly = true)
@@ -42,31 +42,7 @@ public class BookServiceJdbc implements BookService {
 
     @Transactional
     @Override
-    public void deleteBookById(Long id) {
+    public void deleteBookById(String id) {
         bookDao.deleteById(id);
-    }
-
-    @Transactional
-    @Override
-    public void addAuthorToBook(Long bookId, Long authorId) {
-        bookDao.addAuthorToBook(bookId, authorId);
-    }
-
-    @Transactional
-    @Override
-    public void deleteAuthorFromBook(Long bookId, Long authorId) {
-        bookDao.deleteAuthorFromBook(bookId, authorId);
-    }
-
-    @Transactional
-    @Override
-    public void addGenreToBook(Long bookId, Long genreId) {
-        bookDao.addGenreToBook(bookId, genreId);
-    }
-
-    @Transactional
-    @Override
-    public void deleteGenreFromBook(Long bookId, Long genreId) {
-        bookDao.deleteGenreFromBook(bookId, genreId);
     }
 }

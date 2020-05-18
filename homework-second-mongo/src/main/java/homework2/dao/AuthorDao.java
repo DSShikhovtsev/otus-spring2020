@@ -1,11 +1,13 @@
 package homework2.dao;
 
 import homework2.domain.Author;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface AuthorDao extends CrudRepository<Author, Long> {
+public interface AuthorDao extends MongoRepository<Author, Long> {
 
-    List<Author> findAll();
+    Author findById(String id);
+    void deleteById(String id);
 }

@@ -17,13 +17,13 @@ public class CommentUtilShellService implements CommentUtilService {
 
     @Transactional
     @Override
-    public void addComment(Long bookId, Comment comment) {
+    public void addComment(String bookId, Comment comment) {
         commentService.addComment(bookId, comment);
     }
 
     @Transactional
     @Override
-    public void deleteComment(Long commentId) {
+    public void deleteComment(String commentId) {
         commentService.deleteComment(commentId);
     }
 
@@ -35,7 +35,7 @@ public class CommentUtilShellService implements CommentUtilService {
 
     @Transactional
     @Override
-    public Comment getById(Long id) {
+    public Comment getById(String id) {
         return commentService.getById(id);
     }
 }

@@ -16,12 +16,12 @@ public class ShellCommentCommands {
     }
 
     @ShellMethod(value = "add comment", key = {"aC", "addC", "addComment"})
-    public void addComment(@ShellOption Long id, @ShellOption String comment) {
+    public void addComment(@ShellOption String id, @ShellOption String comment) {
         commentService.addComment(id, new Comment(comment));
     }
 
     @ShellMethod(value = "delete comment", key = {"dC", "delC", "deleteComment"})
-    public void deleteComment(@ShellOption Long commentId) {
+    public void deleteComment(@ShellOption String commentId) {
         commentService.deleteComment(commentId);
     }
 
@@ -31,7 +31,7 @@ public class ShellCommentCommands {
     }
 
     @ShellMethod(value = "show comment", key = {"sC", "showComment"})
-    public void showComment(@ShellOption Long commentId) {
+    public void showComment(@ShellOption String commentId) {
         System.out.println(commentService.getById(commentId));
     }
 }

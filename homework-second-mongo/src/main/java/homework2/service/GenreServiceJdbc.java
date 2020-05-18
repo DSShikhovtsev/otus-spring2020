@@ -24,8 +24,8 @@ public class GenreServiceJdbc implements GenreService {
 
     @Transactional(readOnly = true)
     @Override
-    public Genre getGenreById(Long id) {
-        return genreDao.findById(id).orElse(null);
+    public Genre getGenreById(String id) {
+        return genreDao.findById(id);
     }
 
     @Transactional(readOnly = true)
@@ -36,7 +36,7 @@ public class GenreServiceJdbc implements GenreService {
 
     @Transactional
     @Override
-    public void deleteGenreById(Long id) {
+    public void deleteGenreById(String id) {
         genreDao.deleteById(id);
     }
 

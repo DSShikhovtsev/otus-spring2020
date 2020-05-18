@@ -3,8 +3,8 @@ package homework2.service;
 public interface BookUtilService {
 
     void showAll();
-    void showInstance(Long id);
-    void delete(Long id);
+    void showInstance(String id);
+    void delete(String id);
     void add(String title);
-    void update(Long id, String title);
+    void update(String id, String title);
 }

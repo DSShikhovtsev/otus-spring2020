@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface CommentUtilService {
 
-    void addComment(Long bookId, Comment comment);
-    void deleteComment(Long commentId);
+    void addComment(String bookId, Comment comment);
+    void deleteComment(String commentId);
     List<Comment> findAll();
-    Comment getById(Long id);
+    Comment getById(String id);
 }

@@ -1,11 +1,13 @@
 package homework2.dao;
 
 import homework2.domain.Genre;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface GenreDao extends CrudRepository<Genre, Long> {
+public interface GenreDao extends MongoRepository<Genre, Long> {
 
-    List<Genre> findAll();
+    Genre findById(String id);
+    void deleteById(String id);
 }

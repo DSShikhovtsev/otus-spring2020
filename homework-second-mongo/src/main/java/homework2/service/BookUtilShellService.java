@@ -21,13 +21,13 @@ public class BookUtilShellService implements BookUtilService {
 
     @Transactional
     @Override
-    public void showInstance(Long id) {
+    public void showInstance(String id) {
         System.out.println(bookService.getBookById(id));
     }
 
     @Transactional
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         bookService.deleteBookById(id);
     }
 
@@ -39,7 +39,7 @@ public class BookUtilShellService implements BookUtilService {
 
     @Transactional
     @Override
-    public void update(Long id, String title) {
+    public void update(String id, String title) {
         bookService.updateBook(new Book(id, title));
     }
 }

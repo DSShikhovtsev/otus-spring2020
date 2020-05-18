@@ -7,8 +7,8 @@ import java.util.List;
 public interface GenreService {
 
     void save(Genre genre);
-    Genre getGenreById(Long id);
+    Genre getGenreById(String id);
     List<Genre> getAllGenres();
-    void deleteGenreById(Long id);
+    void deleteGenreById(String id);
     void updateGenre(Genre genre);
 }

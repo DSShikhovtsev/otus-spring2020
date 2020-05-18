@@ -21,7 +21,7 @@ public class ShellAuthorCommands {
     }
 
     @ShellMethod(value = "show author by id", key = {"sA", "showAuthor"})
-    public void showAuthor(@ShellOption(defaultValue = "1") Long id) {
+    public void showAuthor(@ShellOption String id) {
         System.out.println(authorService.getAuthorById(id));
     }
 
@@ -31,12 +31,12 @@ public class ShellAuthorCommands {
     }
 
     @ShellMethod(value = "delete author by id", key = {"delA", "delAuthor", "deleteAuthor"})
-    public void deleteAuthor(@ShellOption Long id) {
+    public void deleteAuthor(@ShellOption String id) {
         authorService.deleteAuthorById(id);
     }
 
     @ShellMethod(value = "update Author name by id", key = {"updA", "updAuthor", "updateAuthor"})
-    public void updateAuthor(@ShellOption Long id, @ShellOption String name) {
+    public void updateAuthor(@ShellOption String id, @ShellOption String name) {
         authorService.updateAuthor(new Author(id, name));
     }
 }

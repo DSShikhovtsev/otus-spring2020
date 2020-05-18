@@ -24,8 +24,8 @@ public class AuthorServiceMongo implements AuthorService {
 
     @Transactional(readOnly = true)
     @Override
-    public Author getAuthorById(Long id) {
-        return authorDao.findById(id).orElse(null);
+    public Author getAuthorById(String id) {
+        return authorDao.findById(id);
     }
 
     @Transactional(readOnly = true)
@@ -42,7 +42,7 @@ public class AuthorServiceMongo implements AuthorService {
 
     @Transactional
     @Override
-    public void deleteAuthorById(Long id) {
+    public void deleteAuthorById(String id) {
         authorDao.deleteById(id);
     }
 }

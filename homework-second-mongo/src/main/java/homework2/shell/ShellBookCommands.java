@@ -20,7 +20,7 @@ public class ShellBookCommands {
     }
 
     @ShellMethod(value = "show book by id", key = {"sB", "showBook"})
-    public void showBook(@ShellOption Long id) {
+    public void showBook(@ShellOption String id) {
         bookService.showInstance(id);
     }
 
@@ -30,12 +30,12 @@ public class ShellBookCommands {
     }
 
     @ShellMethod(value = "delete book by id", key = {"delB", "delBook", "deleteBook"})
-    public void deleteBook(@ShellOption Long id) {
+    public void deleteBook(@ShellOption String id) {
         bookService.delete(id);
     }
 
     @ShellMethod(value = "update Book title by id", key = {"updB", "updBook", "updateBook"})
-    public void updateBook(@ShellOption Long id, @ShellOption String title) {
+    public void updateBook(@ShellOption String id, @ShellOption String title) {
         bookService.update(id, title);
     }
 }

@@ -21,14 +21,14 @@ public class CommentServiceJdbc implements CommentService {
 
     @Transactional
     @Override
-    public void addComment(Long bookId, Comment comment) {
-        Book book = bookService.getBookById(bookId);
-        book.getComments().add(dao.save(comment));
+    public void addComment(String bookId, Comment comment) {
+        comment.setBook(bookService.getBookById(bookId));
+        dao.save(comment);
     }
 
     @Transactional
     @Override
-    public void deleteComment(Long commentId) {
+    public void deleteComment(String commentId) {
         dao.deleteById(commentId);
     }
 
@@ -40,7 +40,7 @@ public class CommentServiceJdbc implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
-    public Comment getById(Long id) {
-        return dao.findById(id).orElse(null);
+    public Comment getById(String id) {
+        return dao.findById(id);
     }
 }

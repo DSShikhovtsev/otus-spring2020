@@ -1,11 +1,13 @@
 package homework2.dao;
 
 import homework2.domain.Comment;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface CommentDao extends CrudRepository<Comment, Long> {
+public interface CommentDao extends MongoRepository<Comment, Long> {
 
-    List<Comment> findAll();
+    Comment findById(String id);
+    void deleteById(String id);
 }

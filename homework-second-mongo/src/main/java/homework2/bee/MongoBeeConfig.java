@@ -11,13 +11,16 @@ import org.springframework.core.env.Environment;
 @Configuration
 public class MongoBeeConfig {
 
-    @Autowired
-    private MongoClient mongo;
+    private final MongoClient mongo;
+
+    public MongoBeeConfig(MongoClient mongo) {
+        this.mongo = mongo;
+    }
 
     @Bean
     public Mongobee mongobee(Environment environment) {
         Mongobee runner = new Mongobee(mongo);
-        runner.setDbName("company");
+        runner.setDbName("library");
         runner.setChangeLogsScanPackage(DatabaseChangelog.class.getPackage().getName());
         runner.setSpringEnvironment(environment);
         return runner;

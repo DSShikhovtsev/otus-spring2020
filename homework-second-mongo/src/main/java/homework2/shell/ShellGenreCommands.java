@@ -21,7 +21,7 @@ public class ShellGenreCommands {
     }
 
     @ShellMethod(value = "show genre", key = {"sG", "showGenre"})
-    public void showGenre(@ShellOption Long id) {
+    public void showGenre(@ShellOption String id) {
         System.out.println(genreService.getGenreById(id));
     }
 
@@ -31,12 +31,12 @@ public class ShellGenreCommands {
     }
 
     @ShellMethod(value = "delete genre by id", key = {"delG", "delGenre", "deleteGenre"})
-    public void deleteGenre(@ShellOption Long id) {
+    public void deleteGenre(@ShellOption String id) {
         genreService.deleteGenreById(id);
     }
 
     @ShellMethod(value = "update Genre description by id", key = {"updG", "updGenre", "updateGenre"})
-    public void updateGenre(@ShellOption Long id, @ShellOption String description) {
+    public void updateGenre(@ShellOption String id, @ShellOption String description) {
         genreService.updateGenre(new Genre(id, description));
     }
 }
