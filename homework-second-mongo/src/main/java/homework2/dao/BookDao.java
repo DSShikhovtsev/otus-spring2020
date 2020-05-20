@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface BookDao extends MongoRepository<Book, Long> {
+public interface BookDao extends MongoRepository<Book, Long>, BookDaoCustom {
 
     Book findById(String id);
     void deleteById(String id);

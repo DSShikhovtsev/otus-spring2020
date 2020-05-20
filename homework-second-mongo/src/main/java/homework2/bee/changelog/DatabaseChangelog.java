@@ -2,93 +2,116 @@ package homework2.bee.changelog;
 
 import com.github.mongobee.changeset.ChangeLog;
 import com.github.mongobee.changeset.ChangeSet;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import org.bson.BSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import homework2.domain.Author;
+import homework2.domain.Book;
+import homework2.domain.Comment;
+import homework2.domain.Genre;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Component;
 
 @ChangeLog
+@Component
 public class DatabaseChangelog {
 
+    private Author petya;
+    private Author kolya;
+    private Author oleg;
+    private Author dasha;
+
+    private Genre history;
+    private Genre nature;
+    private Genre mystic;
+    private Genre legend;
+    private Genre animals;
+
+    private Book sea;
+    private Book stalin;
+    private Book pigs;
+    private Book witcher;
+    private Book ghosts;
+    private Book magic;
+    private Book cook;
+
     @ChangeSet(order = "001", id = "addAuthors", author = "temp")
-    public void insertAuthors(DB db) {
-        DBCollection collection = db.getCollection("authors");
-        collection.insert(new BasicDBObject().append("name", "Petya"),
-                new BasicDBObject().append("name", "Kolya"),
-                new BasicDBObject().append("name", "Oleg"),
-                new BasicDBObject().append("name", "Dasha"));
+    public void insertAuthors(MongoTemplate template) {
+        petya = template.save(new Author("Petya"));
+        kolya = template.save(new Author("Kolya"));
+        oleg = template.save(new Author("Oleg"));
+        dasha = template.save(new Author("Dasha"));
     }
 
-    @ChangeSet(order = "002", id = "addBooks", author = "temp")
-    public void insertBooks(DB db) {
-        DBCollection collection = db.getCollection("books");
-        collection.insert(new BasicDBObject().append("title", "About sea")
-                        .append("authors", new BasicDBObject().append("name", "Kolya").append("name", "Dasha"))
-                        .append("genres", new BasicDBObject().append("description", "History").append("description", "Nature").append("description", "Mystic").append("description", "Legend").append("description", "Animals")),
-                new BasicDBObject().append("title", "About Stalin")
-                        .append("authors", new BasicDBObject().append("name", "Petya").append("name", "Dasha"))
-                        .append("genres", new BasicDBObject().append("description", "History")),
-                new BasicDBObject().append("title", "About pigs")
-                        .append("authors", new BasicDBObject().append("name", "Kolya").append("name", "Dasha"))
-                        .append("genres", new BasicDBObject().append("description", "Nature").append("description", "Animals")),
-                new BasicDBObject().append("title", "About Witcher")
-                        .append("authors", new BasicDBObject().append("name", "Dasha"))
-                        .append("genres", new BasicDBObject().append("description", "History").append("description", "Nature").append("description", "Animals")),
-                new BasicDBObject().append("title", "About ghosts")
-                        .append("authors", new BasicDBObject().append("name", "Oleg").append("name", "Dasha"))
-                        .append("genres", new BasicDBObject().append("description", "Mystic").append("description", "Legend")),
-                new BasicDBObject().append("title", "About magic")
-                        .append("authors", new BasicDBObject().append("name", "Petya").append("name", "Dasha"))
-                        .append("genres", new BasicDBObject().append("description", "History").append("description", "Mystic")),
-                new BasicDBObject().append("title", "About cook")
-                        .append("authors", new BasicDBObject().append("name", "Kolya").append("name", "Oleg").append("name", "Dasha"))
-                        .append("genres", new BasicDBObject().append("description", "Nature").append("description", "Animals")));
+    @ChangeSet(order = "002", id = "addGenres", author = "temp")
+    public void insertGenres(MongoTemplate template) {
+        history = template.save(new Genre("History"));
+        nature = template.save(new Genre("Nature"));
+        mystic = template.save(new Genre("Mystic"));
+        legend = template.save(new Genre("Legend"));
+        animals = template.save(new Genre("Animals"));
     }
 
-    @ChangeSet(order = "003", id = "addGenres", author = "temp")
-    public void insertGenres(DB db) {
-        DBCollection collection = db.getCollection("genres");
-        collection.insert(new BasicDBObject().append("description", "History"),
-                new BasicDBObject().append("description", "Nature"),
-                new BasicDBObject().append("description", "Mystic"),
-                new BasicDBObject().append("description", "Legend"),
-                new BasicDBObject().append("description", "Animals"));
+    @ChangeSet(order = "003", id = "addBooks", author = "temp")
+    public void insertBooks(MongoTemplate template) {
+        sea = new Book("About sea");
+        sea.getAuthors().add(kolya);
+        sea.getAuthors().add(dasha);
+        sea.getGenres().add(history);
+        sea.getGenres().add(nature);
+        sea.getGenres().add(mystic);
+        sea.getGenres().add(legend);
+        sea.getGenres().add(animals);
+        sea = template.save(sea);
+
+        stalin = new Book("About Stalin");
+        stalin.getAuthors().add(petya);
+        stalin.getAuthors().add(dasha);
+        stalin.getGenres().add(history);
+        stalin = template.save(stalin);
+
+        pigs = new Book("About pigs");
+        pigs.getAuthors().add(kolya);
+        pigs.getAuthors().add(dasha);
+        pigs.getGenres().add(nature);
+        pigs.getGenres().add(animals);
+        pigs = template.save(pigs);
+
+        witcher = new Book("About Witcher");
+        witcher.getAuthors().add(dasha);
+        witcher.getGenres().add(history);
+        witcher.getGenres().add(nature);
+        witcher.getGenres().add(animals);
+        witcher = template.save(witcher);
+
+        ghosts = new Book("About ghosts");
+        ghosts.getAuthors().add(oleg);
+        ghosts.getAuthors().add(dasha);
+        ghosts.getGenres().add(mystic);
+        ghosts.getGenres().add(legend);
+        ghosts = template.save(ghosts);
+
+        magic = new Book("About magic");
+        magic.getAuthors().add(petya);
+        magic.getAuthors().add(dasha);
+        magic.getGenres().add(history);
+        magic.getGenres().add(mystic);
+        magic = template.save(magic);
+
+        cook = new Book("About cook");
+        cook.getAuthors().add(kolya);
+        cook.getAuthors().add(oleg);
+        cook.getAuthors().add(dasha);
+        cook.getGenres().add(nature);
+        cook.getGenres().add(animals);
+        cook = template.save(cook);
     }
 
     @ChangeSet(order = "004", id = "addComments", author = "temp")
-    public void insertComments(DB db) {
-        DBCollection collection = db.getCollection("comments");
-        collection.insert(new BasicDBObject().append("comment", "Comment 1")
-                        .append("book", new BasicDBObject().append("title", "About sea")
-                                .append("authors", "Kolya").append("authors", "Dasha")
-                                .append("description", "History").append("genres", "Nature").append("genres", "Mystic").append("genres", "Legend").append("genres", "Animals")),
-                new BasicDBObject().append("comment", "Comment 2")
-                        .append("book", new BasicDBObject().append("title", "About Stalin")
-                                .append("authors", "Petya").append("authors", "Dasha")
-                                .append("description", "History")),
-                new BasicDBObject().append("comment", "Comment 3")
-                        .append("book", new BasicDBObject().append("title", "About pigs")
-                                .append("authors", "Kolya").append("authors", "Dasha")
-                                .append("description", "Nature").append("genres", "Animals")),
-                new BasicDBObject().append("comment", "Comment 4")
-                        .append("book", new BasicDBObject().append("title", "About Witcher")
-                                .append("authors", "Dasha")
-                                .append("description", "History").append("genres", "Nature").append("genres", "Animals")),
-                new BasicDBObject().append("comment", "Comment 5")
-                        .append("book", new BasicDBObject().append("title", "About ghosts")
-                                .append("authors", "Oleg").append("authors", "Dasha")
-                                .append("description", "Mystic").append("genres", "Legend")),
-                new BasicDBObject().append("comment", "Comment 6")
-                        .append("book", new BasicDBObject().append("title", "About magic")
-                                .append("authors", "Petya").append("authors", "Dasha")
-                                .append("description", "History").append("description", "Mystic")),
-                new BasicDBObject().append("comment", "Comment 7")
-                        .append("book", new BasicDBObject().append("title", "About cook")
-                                .append("authors", new BasicDBObject().append("name", "Kolya").append("name", "Oleg").append("name", "Dasha"))
-                                .append("genres", new BasicDBObject().append("description", "Nature").append("description", "Animals"))));
+    public void insertComments(MongoTemplate template) {
+        template.save(new Comment("Comment 1", sea));
+        template.save(new Comment("Comment 2", stalin));
+        template.save(new Comment("Comment 3", pigs));
+        template.save(new Comment("Comment 4", witcher));
+        template.save(new Comment("Comment 5", ghosts));
+        template.save(new Comment("Comment 6", magic));
+        template.save(new Comment("Comment 7", cook));
     }
 }

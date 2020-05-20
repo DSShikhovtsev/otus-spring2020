@@ -9,12 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class CommentServiceJdbc implements CommentService {
+public class CommentServiceMongo implements CommentService {
 
     private CommentDao dao;
     private BookService bookService;
 
-    public CommentServiceJdbc(CommentDao dao, BookService bookService) {
+    public CommentServiceMongo(CommentDao dao, BookService bookService) {
         this.dao = dao;
         this.bookService = bookService;
     }

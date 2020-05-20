@@ -1,20 +1,20 @@
-package homework2.bee;
+package homework2.testBee;
 
 import com.github.mongobee.Mongobee;
 import com.mongodb.MongoClient;
-import homework2.bee.changelog.DatabaseChangelog;
+import homework2.testBee.changelog.TestDBChangelog;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @Configuration
-public class MongoBeeConfig {
+public class TestMongoBeeConfig {
 
     private final MongoClient mongo;
     private final MongoTemplate template;
 
-    public MongoBeeConfig(MongoClient mongo, MongoTemplate template) {
+    public TestMongoBeeConfig(MongoClient mongo, MongoTemplate template) {
         this.mongo = mongo;
         this.template = template;
     }
@@ -22,8 +22,8 @@ public class MongoBeeConfig {
     @Bean
     public Mongobee mongobee(Environment environment) {
         Mongobee runner = new Mongobee(mongo);
-        runner.setDbName("library");
-        runner.setChangeLogsScanPackage(DatabaseChangelog.class.getPackage().getName());
+        runner.setDbName("test");
+        runner.setChangeLogsScanPackage(TestDBChangelog.class.getPackage().getName());
         runner.setSpringEnvironment(environment);
         runner.setMongoTemplate(template);
         return runner;

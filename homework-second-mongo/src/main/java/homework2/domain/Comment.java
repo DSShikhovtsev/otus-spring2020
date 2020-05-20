@@ -23,7 +23,17 @@ public class Comment {
     @DBRef
     private Book book;
 
+    public Comment(String id, String comment) {
+        this.id = id;
+        this.comment = comment;
+    }
+
     public Comment(String comment) {
         this.comment = comment;
+    }
+
+    public Comment(String comment, Book book) {
+        this.comment = comment;
+        this.book = book;
     }
 }

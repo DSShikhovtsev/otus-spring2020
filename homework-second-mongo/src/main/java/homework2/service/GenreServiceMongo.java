@@ -8,11 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class GenreServiceJdbc implements GenreService {
+public class GenreServiceMongo implements GenreService {
 
     private final GenreDao genreDao;
 
-    public GenreServiceJdbc(GenreDao genreDao) {
+    public GenreServiceMongo(GenreDao genreDao) {
         this.genreDao = genreDao;
     }
 

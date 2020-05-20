@@ -1,6 +1,7 @@
 package homework2.service;
 
 import homework2.dao.BookDao;
+import homework2.dao.CommentDao;
 import homework2.domain.Book;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,12 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class BookServiceJdbc implements BookService {
+public class BookServiceMongo implements BookService {
 
     private final BookDao bookDao;
+    private final CommentDao commentDao;
 
-    public BookServiceJdbc(BookDao bookDao) {
+    public BookServiceMongo(BookDao bookDao, CommentDao commentDao) {
         this.bookDao = bookDao;
+        this.commentDao = commentDao;
     }
 
     @Transactional
@@ -43,6 +46,7 @@ public class BookServiceJdbc implements BookService {
     @Transactional
     @Override
     public void deleteBookById(String id) {
+        commentDao.deleteByBook(getBookById(id));
         bookDao.deleteById(id);
     }
 }
