@@ -3,14 +3,8 @@ package homework2.service;
 import homework2.domain.Author;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
@@ -21,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class AuthorServiceJdbcTest {
 
-    @MockBean
+    @Autowired
     private AuthorServiceJdbc service;
 
     @Test
@@ -36,8 +30,9 @@ class AuthorServiceJdbcTest {
     void findAll() {
         Author author = new Author(1L, "test");
         Author author1 = new Author(2L, "test1");
+        Author author2 = new Author(3L, "testInsert");
         List<Author> authors = service.getAllAuthors();
-        assertThat(authors).hasSize(2).containsExactlyInAnyOrder(author, author1);
+        assertThat(authors).hasSize(3).containsExactlyInAnyOrder(author, author1, author2);
     }
 
     @Test

@@ -2,18 +2,12 @@ package homework2.service;
 
 import homework2.domain.Author;
 import homework2.domain.Book;
-import homework2.domain.Comment;
 import homework2.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Service для работы с книгами")
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class BookServiceJdbcTest {
 
-    @MockBean
+    @Autowired
     private BookServiceJdbc service;
 
     @Test

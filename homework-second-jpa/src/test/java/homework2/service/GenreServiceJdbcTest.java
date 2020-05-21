@@ -3,12 +3,8 @@ package homework2.service;
 import homework2.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
@@ -19,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class GenreServiceJdbcTest {
 
-    @MockBean
+    @Autowired
     private GenreServiceJdbc service;
 
     @Test
@@ -34,8 +30,9 @@ class GenreServiceJdbcTest {
     void findAll() {
         Genre genre = new Genre(1L, "genre");
         Genre genre1 = new Genre(2L, "genre1");
+        Genre genre2 = new Genre(3L, "test");
         List<Genre> genres = service.getAllGenres();
-        assertThat(genres).hasSize(2).containsExactlyInAnyOrder(genre, genre1);
+        assertThat(genres).hasSize(3).containsExactlyInAnyOrder(genre, genre1, genre2);
     }
 
     @Test

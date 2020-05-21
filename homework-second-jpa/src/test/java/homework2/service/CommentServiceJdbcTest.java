@@ -6,14 +6,9 @@ import homework2.domain.Comment;
 import homework2.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
@@ -21,9 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Service для работы с комментариями")
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CommentServiceJdbcTest {
 
-    @MockBean
+    @Autowired
     private CommentServiceJdbc service;
 
     @Test
