@@ -1,27 +1,52 @@
 package homework2.service;
 
+import homework2.dao.BookDao;
 import homework2.domain.Author;
 import homework2.domain.Book;
 import homework2.domain.Genre;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.given;
 
 @DisplayName("Service для работы с книгами")
-@SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@SpringBootTest(classes = BookServiceJdbc.class)
 class BookServiceJdbcTest {
 
     @Autowired
-    private BookServiceJdbc service;
+    private BookService service;
+
+    @MockBean
+    private BookDao dao;
+
+    @BeforeEach
+    void setUp() {
+        Mockito.reset(dao);
+        List<Book> books = new ArrayList<>();
+        Book book = new Book(1L, "book");
+        book.getAuthors().add(new Author(1L, "test"));
+        book.getGenres().add(new Genre(2L, "genre1"));
+        books.add(book);
+        Book book1 = new Book(2L, "book1");
+        book1.getAuthors().add(new Author(2L, "test1"));
+        book1.getGenres().add(new Genre(1L, "genre"));
+        books.add(book1);
+        Mockito.when(dao.findById(1L)).thenReturn(Optional.of(book)).thenReturn(Optional.empty());
+        given(dao.findById(2L)).willReturn(Optional.of(book1));
+        given(dao.findById(3L)).willReturn(Optional.of(new Book(3L, "test")));
+        given(dao.findAll()).willReturn(books);
+    }
 
     @Test
     @DisplayName("возвращать ожидаемую книгу")
