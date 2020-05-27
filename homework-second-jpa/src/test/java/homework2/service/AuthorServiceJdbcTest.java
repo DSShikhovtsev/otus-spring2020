@@ -1,29 +1,44 @@
 package homework2.service;
 
+import homework2.dao.AuthorDao;
 import homework2.domain.Author;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.given;
 
 @DisplayName("Service для работы с авторами")
-@DataJpaTest
-@RunWith(SpringRunner.class)
-@Import({AuthorServiceJdbc.class})
+@SpringBootTest(classes = AuthorServiceJdbc.class)
 class AuthorServiceJdbcTest {
 
     @Autowired
-    @InjectMocks
-    private AuthorServiceJdbc service;
+    private AuthorService service;
+
+    @MockBean
+    private AuthorDao dao;
+
+    @BeforeEach
+    void setUp() {
+        Mockito.reset(dao);
+        List<Author> list = new ArrayList<>();
+        list.add(new Author(1L, "test"));
+        list.add(new Author(2L, "test1"));
+        Mockito.when(dao.findById(1L)).thenReturn(Optional.of(new Author(1L, "test"))).thenReturn(Optional.empty());
+        given(dao.findById(2L)).willReturn(Optional.of(new Author(2L, "test1")));
+        given(dao.findById(3L)).willReturn(Optional.of(new Author(3L, "testInsert")));
+        given(dao.findAll()).willReturn(list);
+    }
 
     @Test
     @DisplayName("возвращать ожидаемого автора")
