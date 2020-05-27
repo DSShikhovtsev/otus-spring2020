@@ -1,6 +1,6 @@
 package homework2.dao;
 
-public interface BookRepositoryCustom {
+public interface BookDaoCustom {
 
     void addAuthorToBook(Long bookId, Long authorId);
     void deleteAuthorFromBook(Long bookId, Long authorId);

@@ -2,6 +2,10 @@ spring:
   datasource:
     data: data.sql
     initialization-mode: always
+  shell:
+    interactive:
+      enabled: false
+
 
   jpa:
     generate-ddl: false

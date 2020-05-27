@@ -1,6 +1,9 @@
 package homework2.dao;
 
+import homework2.domain.Author;
+import homework2.domain.Book;
 import homework2.domain.Comment;
+import homework2.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +16,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Dao для работы с комментариями")
-@RunWith(SpringRunner.class)
 @DataJpaTest
 class CommentDaoJdbcTest {
 
@@ -31,15 +33,22 @@ class CommentDaoJdbcTest {
     @Test
     @DisplayName("возвращать ожидаемый список комментариев")
     void findAll() {
-        Comment comment = dao.findById(1L).orElse(null);
-        Comment comment1 = dao.findById(2L).orElse(null);
+        Comment comment = dao.findById(1L).get();
+        comment.setBook(new Book(1L, "book"));
+        Comment comment1 = dao.findById(2L).get();
+        comment1.setBook(new Book(2L, "book1"));
         List<Comment> comments = dao.findAll();
         assertThat(comments).hasSize(2).containsExactlyInAnyOrder(comment, comment1);
     }
 
     @Test
+    @DisplayName("возвращать ожидаемый комментарий")
     void getById() {
         Comment comment = new Comment(1L, "comment");
+        Book book = new Book(1L, "book");
+        book.getAuthors().add(new Author(1L, "test"));
+        book.getGenres().add(new Genre(2L, "genre1"));
+        comment.setBook(book);
         assertThat(comment).isEqualToComparingFieldByField(dao.findById(1L).get());
     }
 
