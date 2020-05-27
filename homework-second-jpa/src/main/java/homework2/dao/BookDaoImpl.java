@@ -2,15 +2,21 @@ package homework2.dao;
 
 import homework2.domain.Book;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 public class BookDaoImpl implements BookDaoCustom {
 
-    @Autowired
     private BookDao bookDao;
-    @Autowired
     private AuthorDao authorDao;
-    @Autowired
     private GenreDao genreDao;
+
+    @Lazy
+    @Autowired
+    public BookDaoImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao) {
+        this.bookDao = bookDao;
+        this.authorDao = authorDao;
+        this.genreDao = genreDao;
+    }
 
     @Override
     public void addAuthorToBook(Long bookId, Long authorId) {
