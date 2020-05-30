@@ -39,17 +39,15 @@ public class CommentController {
     }
 
     @PostMapping("/comment")
-    public String saveComment(@RequestParam("idBook") String idBook, Comment comm, Model model) {
+    public String saveComment(@RequestParam("idBook") String idBook, Comment comm) {
         if (comm.getId().isEmpty()) comm.setId(null);
         service.addComment(idBook, comm);
-        model.addAttribute("comments", service.getAllComments());
-        return "commentsPage";
+        return "redirect:/showComment";
     }
 
     @PostMapping("commentDelete")
-    public String deleteComment(@RequestParam("id") String id, Model model) {
+    public String deleteComment(@RequestParam("id") String id) {
         service.deleteComment(id);
-        model.addAttribute("comments", service.getAllComments());
-        return "commentsPage";
+        return "redirect:/showComment";
     }
 }

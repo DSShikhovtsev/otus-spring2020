@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -30,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Controller для работы с комментариями")
 @WebMvcTest(CommentController.class)
-@AutoConfigureDataMongo
 class CommentControllerTest {
 
     @Autowired
@@ -95,7 +93,8 @@ class CommentControllerTest {
         book.getAuthors().add(new Author("1", "test"));
         book.getGenres().add(new Genre("1", "genre"));
         Comment comment = new Comment("3", "testInsert", book);
-        List<Comment> returned = (List<Comment>) Objects.requireNonNull(this.mvc.perform(post("/comment?id=&comment=testInsert&idBook=1")).andExpect(status().isOk()).andReturn()
+        this.mvc.perform(post("/comment?id=&comment=testInsert&idBook=1")).andExpect(status().isFound());
+        List<Comment> returned = (List<Comment>) Objects.requireNonNull(this.mvc.perform(get("/showComment")).andReturn()
                 .getModelAndView()).getModelMap().getAttribute("comments");
         assertThat(returned.contains(comment));
     }
@@ -106,6 +105,6 @@ class CommentControllerTest {
         this.mvc.perform(MockMvcRequestBuilders
                 .post("/commentDelete?id=1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isFound());
     }
 }

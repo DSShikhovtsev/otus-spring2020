@@ -3,8 +3,10 @@ package homework3.service;
 import homework3.domain.Author;
 import homework3.domain.Book;
 import homework3.domain.Genre;
+import homework3.repository.AuthorRepository;
 import homework3.repository.BookRepository;
 import homework3.repository.CommentRepository;
+import homework3.repository.GenreRepository;
 import homework3.service.book.BookService;
 import homework3.service.book.BookServiceMongo;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +35,10 @@ class BookServiceMongoTest {
     private BookRepository repository;
     @MockBean
     private CommentRepository commentRepository;
+    @MockBean
+    private AuthorRepository authorRepository;
+    @MockBean
+    private GenreRepository genreRepository;
 
     @BeforeEach
     void setUp() {

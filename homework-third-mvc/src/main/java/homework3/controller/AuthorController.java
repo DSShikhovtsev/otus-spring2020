@@ -36,17 +36,15 @@ public class AuthorController {
     }
 
     @PostMapping("/author")
-    public String saveAuthor(Author author, Model model) {
+    public String saveAuthor(Author author) {
         if (author.getId().isEmpty()) author.setId(null);
         service.save(author);
-        model.addAttribute("authors", service.getAllAuthors());
-        return "authorsPage";
+        return "redirect:/showAuthor";
     }
 
     @PostMapping("/authorDelete")
-    public String deleteAuthor(@RequestParam("id") String id, Model model) {
+    public String deleteAuthor(@RequestParam("id") String id) {
         service.deleteAuthorById(id);
-        model.addAttribute("authors", service.getAllAuthors());
-        return "authorsPage";
+        return "redirect:/showAuthor";
     }
 }

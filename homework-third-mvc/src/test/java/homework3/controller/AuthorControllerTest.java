@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -27,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Controller для работы с авторами")
 @WebMvcTest(AuthorController.class)
-@AutoConfigureDataMongo
 class AuthorControllerTest  {
 
     @Autowired
@@ -76,7 +74,8 @@ class AuthorControllerTest  {
     @DisplayName("добавлять автора в таблицу")
     void addAuthor() throws Exception {
         Author author = new Author("3", "testInsert");
-        List<Author> returned = (List<Author>) Objects.requireNonNull(this.mvc.perform(post("/author?id=&name=testInsert")).andExpect(status().isOk()).andReturn()
+        this.mvc.perform(post("/author?id=&name=testInsert")).andExpect(status().isFound());
+        List<Author> returned = (List<Author>) Objects.requireNonNull(this.mvc.perform(get("/showAuthor")).andReturn()
                 .getModelAndView()).getModelMap().getAttribute("authors");
         assertThat(returned.contains(author));
     }
@@ -96,6 +95,6 @@ class AuthorControllerTest  {
         this.mvc.perform(MockMvcRequestBuilders
                 .post("/authorDelete?id=1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isFound());
     }
 }

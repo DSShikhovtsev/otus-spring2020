@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -29,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Controller для работы с книгами")
 @WebMvcTest(BookController.class)
-@AutoConfigureDataMongo
 class BookControllerTest {
 
     @Autowired
@@ -90,7 +88,8 @@ class BookControllerTest {
     @DisplayName("добавлять книгу в таблицу")
     void addBook() throws Exception  {
         Book book = new Book("3", "testInsert");
-        List<Book> returned = (List<Book>) Objects.requireNonNull(this.mvc.perform(post("/book?id=&title=testInsert")).andExpect(status().isOk()).andReturn()
+        this.mvc.perform(post("/book?id=&title=testInsert&addAuthorId=&addGenreId=&delAuthorId=&delGenreId=")).andExpect(status().isFound());
+        List<Book> returned = (List<Book>) Objects.requireNonNull(this.mvc.perform(get("/showBook")).andReturn()
                 .getModelAndView()).getModelMap().getAttribute("books");
         assertThat(returned.contains(book));
     }
@@ -112,6 +111,6 @@ class BookControllerTest {
         this.mvc.perform(MockMvcRequestBuilders
                 .post("/bookDelete?id=1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isFound());
     }
 }

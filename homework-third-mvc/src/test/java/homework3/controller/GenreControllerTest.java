@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -27,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Controller для работы с жанрами")
 @WebMvcTest(GenreController.class)
-@AutoConfigureDataMongo
 class GenreControllerTest {
 
     @Autowired
@@ -76,8 +74,9 @@ class GenreControllerTest {
     @DisplayName("добавлять жанр в таблицу")
     void addGenre() throws Exception {
         Genre genre = new Genre("3", "testInsert");
-        List<Genre> returned = (List<Genre>) Objects.requireNonNull(this.mvc.perform(post("/genre?id=&name=testInsert")).andExpect(status().isOk())
-                .andReturn().getModelAndView()).getModelMap().getAttribute("genres");
+        this.mvc.perform(post("/genre?id=&description=testInsert")).andExpect(status().isFound());
+        List<Genre> returned = (List<Genre>) Objects.requireNonNull(this.mvc.perform(get("/showGenre")).andReturn()
+                .getModelAndView()).getModelMap().getAttribute("genres");
         assertThat(returned.contains(genre));
     }
 
@@ -96,6 +95,6 @@ class GenreControllerTest {
         this.mvc.perform(MockMvcRequestBuilders
                 .post("/genreDelete?id=1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isFound());
     }
 }

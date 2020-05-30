@@ -36,17 +36,15 @@ public class GenreController {
     }
 
     @PostMapping("/genre")
-    public String saveGenre(Genre genre, Model model) {
+    public String saveGenre(Genre genre) {
         if (genre.getId().isEmpty()) genre.setId(null);
         service.save(genre);
-        model.addAttribute("genres", service.getAllGenres());
-        return "genresPage";
+        return "redirect:/showGenre";
     }
 
     @PostMapping("/genreDelete")
-    public String deleteGenre(@RequestParam("id") String id, Model model) {
+    public String deleteGenre(@RequestParam("id") String id) {
         service.deleteGenreById(id);
-        model.addAttribute("genres", service.getAllGenres());
-        return "genresPage";
+        return "redirect:/showGenre";
     }
 }

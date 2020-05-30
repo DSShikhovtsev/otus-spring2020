@@ -36,7 +36,8 @@ public class BookController {
     }
 
     @PostMapping("/book")
-    public String saveBook(Book book, Model model) {
+    public String saveBook(Book book, @RequestParam("addAuthorId") String addAuthorId, @RequestParam("addGenreId") String addGenreId,
+                           @RequestParam("delAuthorId") String delAuthorId, @RequestParam("delGenreId") String delGenreId) {
         if (book.getId().isEmpty()) {
             book.setId(null);
         } else {
@@ -44,15 +45,17 @@ public class BookController {
             book.setAuthors(temp.getAuthors());
             book.setGenres(temp.getGenres());
         }
+        service.addAuthorToBook(book, addAuthorId);
+        service.addGenreToBook(book, addGenreId);
+        service.deleteAuthorFomBook(book, delAuthorId);
+        service.deleteGenreFromBook(book, delGenreId);
         service.save(book);
-        model.addAttribute("books", service.getAllBooks());
-        return "booksPage";
+        return "redirect:/showBook";
     }
 
     @PostMapping("/bookDelete")
-    public String deleteBook(@RequestParam("id") String id, Model model) {
+    public String deleteBook(@RequestParam("id") String id) {
         service.deleteBookById(id);
-        model.addAttribute("books", service.getAllBooks());
-        return "booksPage";
+        return "redirect:/showBook";
     }
 }
