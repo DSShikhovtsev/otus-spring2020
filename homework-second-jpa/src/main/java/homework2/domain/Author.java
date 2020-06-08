@@ -3,7 +3,6 @@ package homework2.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 
@@ -11,17 +10,17 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "comments")
-public class Comment {
+@Table(name = "authors")
+public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "comment")
-    private String comment;
+    @Column(name = "name")
+    private String name;
 
-    public Comment(String comment) {
-        this.comment = comment;
+    public Author(String name) {
+        this.name = name;
     }
 }

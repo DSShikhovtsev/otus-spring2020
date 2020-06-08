@@ -17,8 +17,10 @@ public class CommentDaoJdbc implements CommentDao {
 
     @Override
     public void addComment(Long bookId, Comment comment) {
-        comment.setBook(em.find(Book.class, bookId));
         em.persist(comment);
+        Book book = em.find(Book.class, bookId);
+        book.getComments().add(comment);
+        em.merge(book);
     }
 
     @Override
