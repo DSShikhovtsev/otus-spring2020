@@ -3,3 +3,6 @@
 /.idea/
 *.iml
 /.idea/misc.xml
+homework-third-ajax/src/main/resources/static/node_modules
+*.log
+/homework-third-ajax/src/main/resources/static/generated/
