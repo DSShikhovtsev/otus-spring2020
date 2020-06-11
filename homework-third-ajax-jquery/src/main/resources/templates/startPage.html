@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Sections</title>
+</head>
+
+<body>
+<h1>Sections: </h1>
+<table>
+    <thead>
+    <tr>
+        <th>Section</th>
+        <th>Add button</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <a th:href="@{/showAuthors}">Authors</a>
+        </td>
+        <td>
+            <a th:href="@{/addAuthor}">Add author</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a th:href="@{/showBook}">Books</a>
+        </td>
+        <td>
+            <a th:href="@{/addBook}">Add book</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a th:href="@{/showComment}">Comments</a>
+        </td>
+        <td>
+            <a th:href="@{/addComment}">Add comment</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a th:href="@{/showGenre}">Genres</a>
+        </td>
+        <td>
+            <a th:href="@{/addGenre}">Add genre</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

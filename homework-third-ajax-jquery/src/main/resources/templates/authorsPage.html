@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Authors</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Authors: </h1>
+
+    <table class="authors">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Edit Author</th>
+            <th>Delete Author</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+<h2>
+    <a th:href="@{/}">Back</a>
+</h2>
+    <script>
+        $(function () {
+            $.get('/api/showAuthors').done(function (authors) {
+                authors.forEach(function (author) {
+                    $('tbody').append(`
+                    <tr>
+                        <form id="delete-form" action="/authorDelete?id=${author.id}" method="post" action="authorsPage.html">
+                            <td>${author.name}</td>
+                            <td>
+                                <a href="/author?id=${author.id}" href="author.html">Edit</a>
+                            </td>
+                            <td>
+                                <strong>
+                                    <button type="submit">Delete</button>
+                                </strong>
+                            </td>
+                        </form>
+                    </tr>
+                `)
+                });
+            })
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Author page</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<form id="edit-form" th:action="@{/author(id=${author.id})}" th:method="post" action="author.html">
+    <h1>Author Info:</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID: </th>
+            <th>Name: </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+</form>
+<script>
+    $(function () {
+        $.get('/api/author?id=').done(function (author) {
+                $('tbody').append(`
+                    <tr>
+                        <td>
+                            <input id="id-input" type="text" readonly="readonly" value="${author.id}">
+                        </td>
+                        <td>
+                            <input id="holder-input" name="name" type="text" value="${author.name}"/>
+                        </td>
+                    </tr>
+                `)
+            });
+    });
+</script>
+
+</body>
+</html>
