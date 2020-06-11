@@ -1,0 +1,7 @@
+package homework3.repository;
+
+import homework3.domain.Book;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+
+public interface BookRepository extends ReactiveMongoRepository<Book, String>, BookRepositoryCustom {
+}
