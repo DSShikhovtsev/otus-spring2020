@@ -17,7 +17,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @RestController
 public class GenreController {
 
-    @Bean
+    @Bean("genreRouter")
     public RouterFunction<ServerResponse> composedGenreResponse(GenreRepository repository) {
 
         GenreHandler handler = new GenreHandler(repository);

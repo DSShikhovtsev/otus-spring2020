@@ -4,6 +4,7 @@ import homework3.domain.Comment;
 import homework3.repository.CommentRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -14,10 +15,10 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
-@Controller
+@RestController
 public class CommentController {
 
-    @Bean
+    @Bean("commentRouter")
     public RouterFunction<ServerResponse> composedCommentResponse(CommentRepository repository) {
 
         CommentHandler handler = new CommentHandler(repository);

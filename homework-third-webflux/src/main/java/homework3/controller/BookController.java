@@ -17,7 +17,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @RestController
 public class BookController {
 
-    @Bean
+    @Bean("bookRouter")
     public RouterFunction<ServerResponse> composeBookResponse(BookRepository repository) {
 
         BookHandler handler = new BookHandler(repository);

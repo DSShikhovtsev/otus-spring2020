@@ -18,7 +18,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @RestController
 public class AuthorController {
 
-    @Bean
+    @Bean("authorRouter")
     public RouterFunction<ServerResponse> composedAuthorResponse(AuthorRepository repository) {
         
         AuthorHandler handler = new AuthorHandler(repository);
