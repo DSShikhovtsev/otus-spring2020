@@ -1,100 +1,94 @@
 package homework3.controller;
 
+import homework3.domain.Author;
+import homework3.domain.Book;
 import homework3.domain.Genre;
-import homework3.service.genre.GenreService;
-import org.junit.jupiter.api.BeforeEach;
+import homework3.repository.AuthorRepository;
+import homework3.repository.BookRepository;
+import homework3.repository.CommentRepository;
+import homework3.repository.GenreRepository;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("Controller для работы с жанрами")
-@WebMvcTest(GenreController.class)
-class GenreControllerTest {
+@RunWith(SpringRunner.class)
+@WebFluxTest
+public class GenreControllerTest {
 
     @Autowired
-    private MockMvc mvc;
-    @MockBean
-    private GenreService service;
+    @Qualifier("genreRouter")
+    private RouterFunction router;
 
-    @BeforeEach
-    void setUp() {
-        Mockito.reset(service);
+    private WebTestClient client;
+    @MockBean
+    private GenreRepository repository;
+    @MockBean
+    private BookRepository bookRepository;
+    @MockBean
+    private AuthorRepository authorRepository;
+    @MockBean
+    private CommentRepository commentRepository;
+
+    @Before
+    public void setUp() {
+        client = WebTestClient.bindToRouterFunction(router).build();
+
+        Mockito.reset(repository);
         Genre genre = new Genre("1", "genre");
         Genre genre1 = new Genre("2", "genre1");
         Genre genre2 = new Genre("3", "testInsert");
         List<Genre> list = new ArrayList<>();
         list.add(genre);
         list.add(genre1);
-        given(service.getAllGenres()).willReturn(list);
-        given(service.getGenreById("1")).willReturn(genre);
-        given(service.getGenreById("2")).willReturn(new Genre("2", "test"));
-        given(service.getGenreById("3")).willReturn(genre2);
+        given(repository.findAll()).willReturn(Flux.just(genre, genre1));
+        given(repository.findById("1")).willReturn(Mono.just(genre));
+        given(repository.findById("2")).willReturn(Mono.just(new Genre("2", "test")));
+        given(repository.findById("3")).willReturn(Mono.just(genre2));
     }
 
     @Test
-    @DisplayName("возвращать ожидаемый список жанров")
-    void showGenres() throws Exception {
+    @DisplayName("возвращать список всех жанров")
+    public void showGenres() {
         Genre genre = new Genre("1", "genre");
         Genre genre1 = new Genre("2", "genre1");
-        List<Genre> list = new ArrayList<>();
-        list.add(genre);
-        list.add(genre1);
-        String genreList = Objects.requireNonNull(this.mvc.perform(get("/showGenre")).andExpect(status().isOk()).andReturn()
-                .getModelAndView()).getModelMap().getAttribute("genres").toString();
-        assertEquals(genreList, list.toString());
+        client.get()
+                .uri("/flux/showGenres")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(Genre.class)
+                .contains(genre, genre1);
     }
 
     @Test
     @DisplayName("возвращать ожидаемый жанр")
-    void showGenre() throws Exception {
+    public void showGenre() {
         Genre genre = new Genre("1", "genre");
-        Genre returned = (Genre) Objects.requireNonNull(this.mvc.perform(get("/genre?id=1")).andExpect(status().isOk())
-                .andReturn().getModelAndView()).getModelMap().getAttribute("genre");
-        assertEquals(genre, returned);
-    }
-
-    @Test
-    @DisplayName("добавлять жанр в таблицу")
-    void addGenre() throws Exception {
-        Genre genre = new Genre("3", "testInsert");
-        this.mvc.perform(post("/genre?id=&description=testInsert")).andExpect(status().isFound());
-        List<Genre> returned = (List<Genre>) Objects.requireNonNull(this.mvc.perform(get("/showGenre")).andReturn()
-                .getModelAndView()).getModelMap().getAttribute("genres");
-        assertThat(returned.contains(genre));
-    }
-
-    @Test
-    @DisplayName("обновлять описание жанра")
-    void updateGenre() throws Exception {
-        Genre genre = new Genre("2", "test");
-        Genre returned = (Genre) Objects.requireNonNull(this.mvc.perform(get("/genre?id=2")).andExpect(status().isOk())
-                .andReturn().getModelAndView()).getModelMap().getAttribute("genre");
-        assertEquals(genre, returned);
-    }
-
-    @Test
-    @DisplayName("удалять жанр")
-    void deleteGenre() throws Exception {
-        this.mvc.perform(MockMvcRequestBuilders
-                .post("/genreDelete?id=1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isFound());
+        client.get()
+                .uri("/flux/genre/1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Genre.class)
+                .value(response ->
+                        assertThat(response).isEqualToComparingFieldByField(genre));
     }
 }

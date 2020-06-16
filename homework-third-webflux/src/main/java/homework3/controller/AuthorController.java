@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -25,7 +26,7 @@ public class AuthorController {
         
         return route()
                 .GET("/flux/showAuthors", accept(APPLICATION_JSON), handler::authors)
-                .GET("/flux/author", accept(APPLICATION_JSON), handler::author)
+                .GET("/flux/author/{id}", accept(APPLICATION_JSON), handler::author)
                 .GET("/flux/addAuthor", accept(APPLICATION_JSON), handler::addAuthor)
                 .POST("/flux/author", handler::save)
                 .POST("/flux/deleteAuthor", handler::delete)
@@ -46,19 +47,27 @@ public class AuthorController {
         }
 
         public Mono<ServerResponse> author(ServerRequest request) {
-            return ok().contentType(APPLICATION_JSON).body(repository.findById(String.valueOf(request.queryParam("id"))), Author.class);
+            return repository.findById(request.pathVariable("id"))
+                    .flatMap(author -> ok().contentType(APPLICATION_JSON).body(fromValue(author)));
         }
 
         public Mono<ServerResponse> addAuthor(ServerRequest request) {
-            return ok().contentType(APPLICATION_JSON).body(new Author(), Author.class);
+            return Mono.just(new Author()).flatMap(author -> ok().contentType(APPLICATION_JSON).body(fromValue(author)));
         }
 
         public Mono<ServerResponse> save(ServerRequest request) {
-            return null; //TODO
+            return request.bodyToMono(Author.class)
+                    .map(author -> {
+                        if (author.getId().isEmpty()) author.setId(null);
+                        return repository.save(author);
+                    })
+                    .flatMap(author -> ok().body(fromValue(author)));
         }
 
         public Mono<ServerResponse> delete(ServerRequest request) {
-            return null; //TODO
+            return request.bodyToMono(Author.class)
+                    .map(repository::delete)
+                    .flatMap(author -> ok().body(fromValue(author)));
         }
     }
 }

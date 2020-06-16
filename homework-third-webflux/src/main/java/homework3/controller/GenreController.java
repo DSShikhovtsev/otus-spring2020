@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -24,7 +25,7 @@ public class GenreController {
 
         return route()
                 .GET("/flux/showGenres", accept(APPLICATION_JSON), handler::genres)
-                .GET("/flux/genre", accept(APPLICATION_JSON), handler::genre)
+                .GET("/flux/genre/{id}", accept(APPLICATION_JSON), handler::genre)
                 .GET("/flux/addGenre", accept(APPLICATION_JSON), handler::addGenre)
                 .POST("/flux/genre", handler::save)
                 .POST("/flux/deleteGenre", handler::delete)
@@ -44,19 +45,23 @@ public class GenreController {
         }
 
         public Mono<ServerResponse> genre(ServerRequest request) {
-            return ok().contentType(APPLICATION_JSON).body(repository.findById(String.valueOf(request.queryParam("id"))), Genre.class);
+            return ok().contentType(APPLICATION_JSON).body(repository.findById(request.pathVariable("id")), Genre.class);
         }
 
         public Mono<ServerResponse> addGenre(ServerRequest request) {
-            return ok().contentType(APPLICATION_JSON).body(new Genre(), Genre.class);
+            return Mono.just(new Genre()).flatMap(genre -> ok().contentType(APPLICATION_JSON).body(fromValue(genre)));
         }
 
         public Mono<ServerResponse> save(ServerRequest request) {
-            return null; //TODO
+            return request.bodyToMono(Genre.class)
+                    .map(repository::save)
+                    .flatMap(genre -> ok().body(fromValue(genre)));
         }
 
         public Mono<ServerResponse> delete(ServerRequest request) {
-            return null; //TODO
+            return request.bodyToMono(Genre.class)
+                    .map(repository::delete)
+                    .flatMap(genre -> ok().body(fromValue(genre)));
         }
     }
 }
