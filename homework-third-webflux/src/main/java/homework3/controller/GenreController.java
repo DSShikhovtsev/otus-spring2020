@@ -28,7 +28,7 @@ public class GenreController {
                 .GET("/flux/genre/{id}", accept(APPLICATION_JSON), handler::genre)
                 .GET("/flux/addGenre", accept(APPLICATION_JSON), handler::addGenre)
                 .POST("/flux/genre", handler::save)
-                .POST("/flux/deleteGenre", handler::delete)
+                .POST("/flux/deleteGenre/{id}", handler::delete)
                 .build();
     }
 
@@ -54,14 +54,15 @@ public class GenreController {
 
         public Mono<ServerResponse> save(ServerRequest request) {
             return request.bodyToMono(Genre.class)
-                    .map(repository::save)
-                    .flatMap(genre -> ok().body(fromValue(genre)));
+                    .flatMap(genre -> {
+                        if (genre.getId() != null && genre.getId().isEmpty()) genre.setId(null);
+                        return ok().build(repository.save(genre));
+                    });
         }
 
         public Mono<ServerResponse> delete(ServerRequest request) {
-            return request.bodyToMono(Genre.class)
-                    .map(repository::delete)
-                    .flatMap(genre -> ok().body(fromValue(genre)));
+            return repository.deleteById(request.pathVariable("id"))
+                    .flatMap(genre -> ok().build());
         }
     }
 }

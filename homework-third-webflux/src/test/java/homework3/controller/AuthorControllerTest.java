@@ -26,7 +26,6 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 @DisplayName("Controller для работы с авторами")
 @RunWith(SpringRunner.class)
@@ -62,7 +61,8 @@ public class AuthorControllerTest  {
         given(repository.findById("1")).willReturn(Mono.just(author));
         given(repository.findById("2")).willReturn(Mono.just(new Author("2", "test")));
         given(repository.findById("3")).willReturn(Mono.just(author2));
-        given(repository.save(any())).willReturn(Mono.just(author2));
+        given(repository.save(author2)).willReturn(Mono.empty());
+        given(repository.deleteById("1")).willReturn(Mono.empty());
     }
 
     @Test
@@ -102,8 +102,17 @@ public class AuthorControllerTest  {
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(author), Author.class)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(Author.class)
-                .value(response -> assertThat(response).isEqualToComparingFieldByField(author));
+                .expectStatus().isOk();
+    }
+
+    @Test
+    @DisplayName("удалять автора из таблицы")
+    public void deleteAuthor() {
+        client.post()
+                .uri("/flux/deleteAuthor/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk();
     }
 }

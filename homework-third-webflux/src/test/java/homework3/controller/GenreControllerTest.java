@@ -1,7 +1,5 @@
 package homework3.controller;
 
-import homework3.domain.Author;
-import homework3.domain.Book;
 import homework3.domain.Genre;
 import homework3.repository.AuthorRepository;
 import homework3.repository.BookRepository;
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @DisplayName("Controller для работы с жанрами")
@@ -63,6 +61,8 @@ public class GenreControllerTest {
         given(repository.findById("1")).willReturn(Mono.just(genre));
         given(repository.findById("2")).willReturn(Mono.just(new Genre("2", "test")));
         given(repository.findById("3")).willReturn(Mono.just(genre2));
+        given(repository.save(genre2)).willReturn(Mono.empty());
+        given(repository.deleteById("1")).willReturn(Mono.empty());
     }
 
     @Test
@@ -90,5 +90,29 @@ public class GenreControllerTest {
                 .expectBody(Genre.class)
                 .value(response ->
                         assertThat(response).isEqualToComparingFieldByField(genre));
+    }
+
+    @Test
+    @DisplayName("добавлять жанр в таблицу")
+    public void addGenre() {
+        Genre genre  = new Genre("3", "testInsert");
+        client.post()
+                .uri("/flux/genre")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(genre), Genre.class)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    @DisplayName("удалять жанр из таблицы")
+    public void deleteGenre() {
+        client.post()
+                .uri("/flux/deleteGenre/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk();
     }
 }

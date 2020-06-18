@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -27,7 +28,6 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 @DisplayName("Controller для работы с книгами")
 @RunWith(SpringRunner.class)
@@ -69,6 +69,8 @@ public class BookControllerTest {
         given(repository.findById("2")).willReturn(Mono.just(book2));
         given(repository.findById("3")).willReturn(Mono.just(new Book("3", "testInsert")));
         given(repository.findAll()).willReturn(Flux.just(book, book1));
+        given(repository.save(book2)).willReturn(Mono.empty());
+        given(repository.deleteById("1")).willReturn(Mono.empty());
     }
 
     @Test
@@ -102,5 +104,31 @@ public class BookControllerTest {
                 .expectBody(Book.class)
                 .value(response ->
                         assertThat(response).isEqualToComparingFieldByField(book));
+    }
+
+    @Test
+    @DisplayName("добавлять книгу в таблицу")
+    public void addBook() {
+        Book book = new Book("2", "test");
+        book.getAuthors().add(new Author("2", "test1"));
+        book.getGenres().add(new Genre("2", "genre1"));
+        client.post()
+                .uri("/flux/book")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(book), Book.class)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    @DisplayName("удалять книгу из таблицы")
+    public void deleteBook() {
+        client.post()
+                .uri("/flux/deleteBook/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk();
     }
 }

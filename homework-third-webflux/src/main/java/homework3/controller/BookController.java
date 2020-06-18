@@ -1,6 +1,8 @@
 package homework3.controller;
 
+import homework3.domain.Author;
 import homework3.domain.Book;
+import homework3.domain.Genre;
 import homework3.repository.AuthorRepository;
 import homework3.repository.BookRepository;
 import homework3.repository.CommentRepository;
@@ -11,6 +13,8 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+
+import java.util.Objects;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
@@ -34,7 +38,7 @@ public class BookController {
                 .GET("/flux/book/{id}", accept(APPLICATION_JSON), handler::book)
                 .GET("/flux/addBook", accept(APPLICATION_JSON), handler::addBook)
                 .POST("/flux/book", handler::save)
-                .POST("/flux/deleteBook", handler::delete)
+                .POST("/flux/deleteBook/{id}", handler::delete)
                 .build();
     }
 
@@ -52,7 +56,6 @@ public class BookController {
             this.commentRepository = commentRepository;
         }
 
-
         public Mono<ServerResponse> books(ServerRequest request) {
             return ok().contentType( APPLICATION_JSON ).body( repository.findAll(), Book.class);
         }
@@ -67,32 +70,26 @@ public class BookController {
 
         public Mono<ServerResponse> save(ServerRequest request) {
             return request.bodyToMono(Book.class)
-                    .map(book -> {
-                        if (book.getId().isEmpty()) book.setId(null);
-                        authorRepository.findById(String.valueOf(request.queryParam("addAuthorId")))
-                                .blockOptional().ifPresent(author -> book.getAuthors().add(author));
-                        genreRepository.findById(String.valueOf(request.queryParam("addGenreId")))
-                                .blockOptional().ifPresent(genre -> book.getGenres().add(genre));
-                        book.getAuthors().remove(
-                                authorRepository.findById(String.valueOf(request.queryParam("delAuthorId")))
-                                        .blockOptional().orElse(null)
-                        );
-                        book.getGenres().remove(
-                                genreRepository.findById(String.valueOf(request.queryParam("delGenreId")))
-                                        .blockOptional().orElse(null)
-                        );
-                        return repository.save(book);
-                    })
-                    .flatMap(author -> ok().body(fromValue(author)));
+                    .flatMap(book -> {
+                        if (book.getId() != null && book.getId().isEmpty()) book.setId(null);
+                        Mono<Author> authorAdd = authorRepository.findById(String.valueOf(request.queryParam("addAuthorId")));
+                        if (authorAdd != null) book.getAuthors().add(authorAdd.block());
+                        Mono<Genre> genreAdd = genreRepository.findById(String.valueOf(request.queryParam("addGenreId")));
+                        if (genreAdd != null) book.getGenres().add(genreAdd.block());
+                        Mono<Author> authorDelete = authorRepository.findById(String.valueOf(request.queryParam("delAuthorId")));
+                        if (authorDelete != null) book.getAuthors().remove(authorDelete.block());
+                        Mono<Genre> genreDelete = genreRepository.findById(String.valueOf(request.queryParam("delGenreId")));
+                        if (genreDelete != null) book.getGenres().remove(genreDelete.block());
+                        return ok().build(repository.save(book));
+                    });
         }
 
         public Mono<ServerResponse> delete(ServerRequest request) {
-            return request.bodyToMono(Book.class)
-                    .map(book -> {
-                        commentRepository.deleteByBookId(book.getId());
-                        return repository.delete(book);
-                    })
-                    .flatMap(author -> ok().body(fromValue(author)));
+            return repository.deleteById(request.pathVariable("id"))
+                    .flatMap(book -> {
+                        commentRepository.deleteByBookId(request.pathVariable("id"));
+                        return ok().build();
+                    });
         }
     }
 }

@@ -13,5 +13,5 @@ public interface CommentRepository extends ReactiveMongoRepository<Comment, Stri
 
     Mono<Comment> findById(String id);
 
-    Mono<Comment> save(Mono<Comment> comment);
+    Mono<Void> save(Comment comment);
 }

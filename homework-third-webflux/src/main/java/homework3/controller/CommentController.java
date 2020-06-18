@@ -1,5 +1,6 @@
 package homework3.controller;
 
+import homework3.domain.Book;
 import homework3.domain.Comment;
 import homework3.repository.BookRepository;
 import homework3.repository.CommentRepository;
@@ -29,7 +30,7 @@ public class CommentController {
                 .GET("/flux/comment/{id}", accept(APPLICATION_JSON), handler::comment)
                 .GET("/flux/addComment", accept(APPLICATION_JSON), handler::addComment)
                 .POST("/flux/comment", handler::save)
-                .POST("/flux/deleteComment", handler::delete)
+                .POST("/flux/deleteComment/{id}", handler::delete)
                 .build();
     }
 
@@ -58,18 +59,17 @@ public class CommentController {
 
         public Mono<ServerResponse> save(ServerRequest request) {
             return request.bodyToMono(Comment.class)
-                    .map(comment -> {
-                        if (comment.getId().isEmpty()) comment.setId(null);
-                        comment.setBook(bookRepository.findById(String.valueOf(request.queryParam("idBook"))).blockOptional().orElse(null));
-                        return repository.save(comment);
-                    })
-                    .flatMap(comment -> ok().body(fromValue(comment)));
+                    .flatMap(comment -> {
+                        if (comment.getId() != null && comment.getId().isEmpty()) comment.setId(null);
+                        Mono<Book> book = bookRepository.findById(String.valueOf(request.queryParam("idBook")));
+                        if (book != null) comment.setBook(book.block());
+                        return ok().build(repository.save(comment));
+                    });
         }
 
         public Mono<ServerResponse> delete(ServerRequest request) {
-            return request.bodyToMono(Comment.class)
-                    .map(repository::delete)
-                    .flatMap(comment -> ok().body(fromValue(comment)));
+            return repository.deleteById(request.pathVariable("id"))
+                    .flatMap(comment -> ok().build());
         }
     }
 }

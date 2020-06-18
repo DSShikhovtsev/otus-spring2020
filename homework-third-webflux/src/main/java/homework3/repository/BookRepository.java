@@ -11,5 +11,5 @@ public interface BookRepository extends ReactiveMongoRepository<Book, String>, B
 
     Mono<Book> findById(String id);
 
-    Mono<Book> save(Mono<Book> book);
+    Mono<Void> save(Book book);
 }

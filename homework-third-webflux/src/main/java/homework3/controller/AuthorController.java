@@ -28,8 +28,8 @@ public class AuthorController {
                 .GET("/flux/showAuthors", accept(APPLICATION_JSON), handler::authors)
                 .GET("/flux/author/{id}", accept(APPLICATION_JSON), handler::author)
                 .GET("/flux/addAuthor", accept(APPLICATION_JSON), handler::addAuthor)
-                .POST("/flux/author", handler::save)
-                .POST("/flux/deleteAuthor", handler::delete)
+                .POST("/flux/author", accept(APPLICATION_JSON), handler::save)
+                .POST("/flux/deleteAuthor/{id}", handler::delete)
                 .build();
     }
     
@@ -57,17 +57,15 @@ public class AuthorController {
 
         public Mono<ServerResponse> save(ServerRequest request) {
             return request.bodyToMono(Author.class)
-                    .map(author -> {
-                        if (author.getId().isEmpty()) author.setId(null);
-                        return repository.save(author);
-                    })
-                    .flatMap(author -> ok().body(fromValue(author)));
+                    .flatMap(author -> {
+                        if (author.getId() != null && author.getId().isEmpty()) author.setId(null);
+                        return ok().build(repository.save(author));
+                    });
         }
 
         public Mono<ServerResponse> delete(ServerRequest request) {
-            return request.bodyToMono(Author.class)
-                    .map(repository::delete)
-                    .flatMap(author -> ok().body(fromValue(author)));
+            return repository.deleteById(request.pathVariable("id"))
+                    .flatMap(author -> ok().build());
         }
     }
 }

@@ -10,4 +10,6 @@ public interface AuthorRepository extends ReactiveMongoRepository<Author, String
     Flux<Author> findAll();
 
     Mono<Author> findById(String id);
+
+    Mono<Void> save(Author author);
 }

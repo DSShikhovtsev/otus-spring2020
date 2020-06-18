@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @DisplayName("Controller для работы с комментариями")
@@ -74,6 +74,8 @@ public class CommentControllerTest {
         given(repository.findById("1")).willReturn(Mono.just(comment));
         given(repository.findById("2")).willReturn(Mono.just(comment1));
         given(repository.findById("3")).willReturn(Mono.just(comment2));
+        given(repository.save(comment2)).willReturn(Mono.empty());
+        given(repository.deleteById("1")).willReturn(Mono.empty());
     }
 
     @Test
@@ -109,5 +111,32 @@ public class CommentControllerTest {
                 .expectBody(Comment.class)
                 .value(response ->
                         assertThat(response).isEqualToComparingFieldByField(comment));
+    }
+
+    @Test
+    @DisplayName("добавлять комментарий в таблицу")
+    public void addComment() {
+        Book book = new Book("1", "book");
+        book.getAuthors().add(new Author("1", "test"));
+        book.getGenres().add(new Genre("1", "genre"));
+        Comment comment = new Comment("3", "testInsert", book);
+        client.post()
+                .uri("/flux/comment")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(comment), Comment.class)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    @DisplayName("удалять комментарий из таблицы")
+    public void deleteComment() {
+        client.post()
+                .uri("/flux/deleteComment/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk();
     }
 }
