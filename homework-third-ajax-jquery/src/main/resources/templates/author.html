@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<form id="edit-form" th:action="@{/author(id=${author.id})}" th:method="post" action="author.html">
+<form id="edit-form" method="post" action="author.html">
     <h1>Author Info:</h1>
     <table>
         <thead>
@@ -17,29 +17,57 @@
         </tr>
         </thead>
         <tbody>
-
         </tbody>
     </table>
     <div class="row">
-        <button type="submit">Save</button>
+        <button id="save-button" type="submit">Save</button>
     </div>
 </form>
 <script>
-    $(function () {
-        $.get('/api/author?id=').done(function (author) {
-                $('tbody').append(`
+    $(document).ready(function () {
+        var url = document.URL;
+        var id = url.substring(url.lastIndexOf('id='));
+
+        $(function () {
+            $.get('/api/author?' + id).done(function (author) {
+                $("tbody").append(`
                     <tr>
                         <td>
-                            <input id="id-input" type="text" readonly="readonly" value="${author.id}">
+                            <input id="id-input" type="text" readOnly value="${author.id}"/>
                         </td>
                         <td>
-                            <input id="holder-input" name="name" type="text" value="${author.name}"/>
+                            <input id="holder-input" type="text" value="${author.name}"/>
+                        </td>
+                        <td>
+                            <form id="delete-form" method="post" action="/authorDelete?id=${author.id}">
+                                <div className="row">
+                                    <button id="delete-button" type="submit">Delete</button>
+                                </div>
+                            </form>
                         </td>
                     </tr>
-                `)
-            });
+                `);
+
+                $("#delete-button").click(function() {
+                    $("#delete-form").submit();
+                });
+
+                $("#save-button").click(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: '/author',
+                        dataType: 'json',
+                        contentType: "application/json",
+                        type: 'POST',
+                        data: {
+                            id: $('#id-input').val(),
+                            name: $('#holder-input').val()
+                        }
+                    })
+                });
+            })
+        });
     });
 </script>
-
 </body>
 </html>

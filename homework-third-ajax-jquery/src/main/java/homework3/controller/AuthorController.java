@@ -31,11 +31,11 @@ public class AuthorController {
     @GetMapping("/addAuthor")
     public String addAuthor(Model model) {
         model.addAttribute("author", new Author());
-        return "author";
+        return "addAuthor";
     }
 
     @PostMapping("/author")
-    public String saveAuthor(Author author) {
+    public String saveAuthor(@RequestParam Author author) {
         if (author.getId().isEmpty()) author.setId(null);
         service.save(author);
         return "redirect:/showAuthors";
