@@ -11,8 +11,8 @@ import java.util.List;
 @Service
 public class CommentServiceJpa implements CommentService {
 
-    private CommentRepository repository;
-    private BookService bookService;
+    private final CommentRepository repository;
+    private final BookService bookService;
 
     public CommentServiceJpa(CommentRepository repository, BookService bookService) {
         this.repository = repository;

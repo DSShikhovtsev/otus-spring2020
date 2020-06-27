@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Lazy;
 
 public class BookRepositoryCustomImpl implements BookRepositoryCustom {
 
-    private BookRepository bookRepository;
-    private AuthorRepository authorRepository;
-    private GenreRepository genreRepository;
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final GenreRepository genreRepository;
 
     @Lazy
     @Autowired

@@ -7,11 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class CommentUtilShellService implements CommentUtilService {
+public class CommentUtilRestService implements CommentUtilService {
 
-    private CommentService commentService;
+    private final CommentService commentService;
 
-    public CommentUtilShellService(CommentService commentService) {
+    public CommentUtilRestService(CommentService commentService) {
         this.commentService = commentService;
     }
 
