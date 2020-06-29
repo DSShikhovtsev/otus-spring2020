@@ -1,28 +1,80 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>Genre page</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 
-<form id="edit-form" th:action="@{/genre(id=${genre.id})}" th:method="post" action="genre.html">
-    <h1>Author Info:</h1>
-
+<form id="edit-form" method="post" action="genre.html">
+    <h1>Genre Info:</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID: </th>
+            <th>Description: </th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
     <div class="row">
-        <label for="id-input">ID:</label>
-        <input id="id-input" type="text" readonly="readonly" th:value="${genre.id}" value="none">
-    </div>
-
-    <div class="row">
-        <label for="holder-input">Description:</label>
-        <input id="holder-input" name="description" type="text" th:value="${genre.description}"/>
-    </div>
-
-    <div class="row">
-        <button type="submit">Save</button>
+        <button id="save-button" type="submit">Save</button>
     </div>
 </form>
+<div id="delete">
 
+</div>
+<script>
+    $(document).ready(function () {
+        var url = document.URL;
+        var id = url.substring(url.lastIndexOf('id='));
+
+        $(function () {
+            $.get('/api/genre?' + id).done(function (genre) {
+                $("tbody").append(`
+                    <tr>
+                        <td>
+                            <input id="id-input" type="text" readOnly value="${genre.id}"/>
+                        </td>
+                        <td>
+                            <input id="holder-input" type="text" value="${genre.description}"/>
+                        </td>
+                    </tr>
+                `);
+                $("#delete").append(`
+                    <form id="delete-form" method="post" action="/genreDelete?id=${genre.id}">
+                        <div className="row">
+                            <button id="delete-button" type="submit">Delete</button>
+                        </div>
+                    </form>
+                `);
+
+                $("#delete-button").click(function() {
+                    $("#delete-form").submit();
+                });
+
+                $("#save-button").click(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: '/api/genre',
+                        dataType: 'json',
+                        contentType: "application/json",
+                        type: 'POST',
+                        data: JSON.stringify({
+                            id: $('#id-input').val(),
+                            description: $('#holder-input').val()
+                        })
+                    })
+                        .done(function(json) {
+                            console.log(json);
+                        });
+                    window.location.replace("/showGenres");
+                });
+            })
+        });
+    });
+</script>
 </body>
 </html>

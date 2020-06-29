@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>Author page</title>
@@ -58,13 +58,13 @@
                 $("#save-button").click(function (event) {
                     event.preventDefault();
                     $.ajax({
-                        url: '/author',
+                        url: '/api/author',
                         dataType: 'json',
                         contentType: "application/json",
                         type: 'POST',
                         data: JSON.stringify({
-                            id: $('#id-input').text(),
-                            name: $('#holder-input').text()
+                            id: $('#id-input').val(),
+                            name: $('#holder-input').val()
                         })
                     })
                         .done(function(json) {

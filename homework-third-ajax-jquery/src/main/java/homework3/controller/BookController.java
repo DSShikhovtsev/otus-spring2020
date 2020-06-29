@@ -17,7 +17,7 @@ public class BookController {
         this.service = service;
     }
 
-    @GetMapping("/showBook")
+    @GetMapping("/showBooks")
     public String showBooks(Model model) {
         model.addAttribute("books", service.getAllBooks());
         return "booksPage";

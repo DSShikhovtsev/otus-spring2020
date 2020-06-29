@@ -18,7 +18,7 @@ public class CommentController {
         this.service = service;
     }
 
-    @GetMapping("/showComment")
+    @GetMapping("/showComments")
     public String showComments(Model model) {
         model.addAttribute("comments", service.getAllComments());
         return "commentsPage";

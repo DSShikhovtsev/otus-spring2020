@@ -2,9 +2,7 @@ package homework3.controller.rest;
 
 import homework3.domain.Comment;
 import homework3.service.comment.CommentService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +23,10 @@ public class CommentRestController {
     @GetMapping("/api/comment")
     public Comment showComment(@RequestParam("id") String id) {
         return service.getById(id);
+    }
+
+    @PostMapping("/api/comment")
+    public void saveComment(@RequestBody Comment comment, @RequestParam String bookId) {
+        service.addComment(bookId, comment);
     }
 }

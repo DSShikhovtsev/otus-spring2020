@@ -2,9 +2,7 @@ package homework3.controller.rest;
 
 import homework3.domain.Author;
 import homework3.service.author.AuthorService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +23,10 @@ public class AuthorRestController {
     @GetMapping("/api/author")
     public Author showAuthor(@RequestParam("id") String id) {
         return service.getAuthorById(id);
+    }
+
+    @PostMapping("/api/author")
+    public void saveAuthor(@RequestBody Author author) {
+        service.save(author);
     }
 }

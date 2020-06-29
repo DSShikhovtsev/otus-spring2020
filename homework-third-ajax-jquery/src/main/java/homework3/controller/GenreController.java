@@ -17,7 +17,7 @@ public class GenreController {
         this.service = service;
     }
 
-    @GetMapping("/showGenre")
+    @GetMapping("/showGenres")
     public String showGenres(Model model) {
         model.addAttribute("genres", service.getAllGenres());
         return "genresPage";
