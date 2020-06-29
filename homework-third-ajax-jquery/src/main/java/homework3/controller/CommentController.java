@@ -35,12 +35,12 @@ public class CommentController {
         Comment comment = new Comment();
         comment.setBook(new Book());
         model.addAttribute("comment", comment);
-        return "comment";
+        return "addComment";
     }
 
     @PostMapping("/comment")
     public String saveComment(@RequestParam("idBook") String idBook, Comment comm) {
-        if (comm.getId().isEmpty()) comm.setId(null);
+        if (comm.getId() != null && comm.getId().isEmpty()) comm.setId(null);
         service.addComment(idBook, comm);
         return "redirect:/showComment";
     }

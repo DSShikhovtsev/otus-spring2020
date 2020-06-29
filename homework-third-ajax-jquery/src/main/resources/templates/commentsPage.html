@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Comments</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -14,28 +15,30 @@
             <th>Comment</th>
             <th>Book</th>
             <th>Edit Comment</th>
-            <th>Delete Comment</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="comment : ${comments}">
-            <form id="delete-form" th:action="@{/commentDelete(id=${comment.id})}" th:method="post" action="commentsPage.html">
-                <td th:text="${comment.comment}">none</td>
-                <td th:text="${comment.book.title}">none</td>
-                <td>
-                    <a th:href="@{/comment(id=${comment.id})}" href="comment.html">Edit</a>
-                </td>
-                <td>
-                    <strong>
-                        <button type="submit">Delete</button>
-                    </strong>
-                </td>
-            </form>
-        </tr>
         </tbody>
     </table>
 <h2>
     <a th:href="@{/}">Back</a>
 </h2>
+    <script>
+        $(function() {
+            $.get('/api/showComments').done(function (comments) {
+                comments.forEach(function (comment) {
+                    $('tbody').append(`
+                    <tr>
+                        <td defaultValue="none">${comment.comment}</td>
+                        <td>${comment.book.title}</td>
+                        <td>
+                            <a href="/comment?id=${comment.id}">Edit</a>
+                        </td>
+                    </tr>
+                `)
+                })
+            })
+        });
+    </script>
 </body>
 </html>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Genres</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -13,27 +14,29 @@
         <tr>
             <th>Description</th>
             <th>Edit Genre</th>
-            <th>Delete Genre</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="genre : ${genres}">
-            <form id="delete-form" th:action="@{/genreDelete(id=${genre.id})}" th:method="post" action="genresPage.html">
-                <td th:text="${genre.description}">none</td>
-                <td>
-                    <a th:href="@{/genre(id=${genre.id})}" href="genre.html">Edit</a>
-                </td>
-                <td>
-                    <strong>
-                        <button type="submit">Delete</button>
-                    </strong>
-                </td>
-            </form>
-        </tr>
         </tbody>
     </table>
 <h2>
     <a th:href="@{/}">Back</a>
 </h2>
+    <script>
+        $(function() {
+            $.get('/api/showGenres').done(function (genres) {
+                genres.forEach(function (genre) {
+                    $('tbody').append(`
+                    <tr>
+                        <td defaultValue="none">${genre.description}</td>
+                        <td>
+                            <a href="/genre?id=${genre.id}">Edit</a>
+                        </td>
+                    </tr>
+                `)
+                })
+            })
+        });
+    </script>
 </body>
 </html>

@@ -35,8 +35,8 @@ public class AuthorController {
     }
 
     @PostMapping("/author")
-    public String saveAuthor(@RequestParam Author author) {
-        if (author.getId().isEmpty()) author.setId(null);
+    public String saveAuthor(Author author) {
+        if (author.getId() != null && author.getId().isEmpty()) author.setId(null);
         service.save(author);
         return "redirect:/showAuthors";
     }

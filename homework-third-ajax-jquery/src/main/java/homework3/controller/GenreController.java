@@ -32,12 +32,12 @@ public class GenreController {
     @GetMapping("/addGenre")
     public String addGenre(Model model) {
         model.addAttribute("genre", new Genre());
-        return "genre";
+        return "addGenre";
     }
 
     @PostMapping("/genre")
     public String saveGenre(Genre genre) {
-        if (genre.getId().isEmpty()) genre.setId(null);
+        if (genre.getId() != null && genre.getId().isEmpty()) genre.setId(null);
         service.save(genre);
         return "redirect:/showGenre";
     }

@@ -23,6 +23,9 @@
         <button id="save-button" type="submit">Save</button>
     </div>
 </form>
+<div id="delete">
+
+</div>
 <script>
     $(document).ready(function () {
         var url = document.URL;
@@ -38,14 +41,14 @@
                         <td>
                             <input id="holder-input" type="text" value="${author.name}"/>
                         </td>
-                        <td>
-                            <form id="delete-form" method="post" action="/authorDelete?id=${author.id}">
-                                <div className="row">
-                                    <button id="delete-button" type="submit">Delete</button>
-                                </div>
-                            </form>
-                        </td>
                     </tr>
+                `);
+                $("#delete").append(`
+                    <form id="delete-form" method="post" action="/authorDelete?id=${author.id}">
+                        <div className="row">
+                            <button id="delete-button" type="submit">Delete</button>
+                        </div>
+                    </form>
                 `);
 
                 $("#delete-button").click(function() {
@@ -59,11 +62,15 @@
                         dataType: 'json',
                         contentType: "application/json",
                         type: 'POST',
-                        data: {
-                            id: $('#id-input').val(),
-                            name: $('#holder-input').val()
-                        }
+                        data: JSON.stringify({
+                            id: $('#id-input').text(),
+                            name: $('#holder-input').text()
+                        })
                     })
+                        .done(function(json) {
+                            console.log(json);
+                        });
+                    window.location.replace("/showAuthors");
                 });
             })
         });

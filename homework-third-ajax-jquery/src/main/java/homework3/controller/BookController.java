@@ -32,13 +32,13 @@ public class BookController {
     @GetMapping("addBook")
     public String addBook(Model model) {
         model.addAttribute("book", new Book());
-        return "book";
+        return "addBook";
     }
 
     @PostMapping("/book")
     public String saveBook(Book book, @RequestParam("addAuthorId") String addAuthorId, @RequestParam("addGenreId") String addGenreId,
                            @RequestParam("delAuthorId") String delAuthorId, @RequestParam("delGenreId") String delGenreId) {
-        if (book.getId().isEmpty()) {
+        if (book.getId() != null && book.getId().isEmpty()) {
             book.setId(null);
         } else {
             Book temp = service.getBookById(book.getId());
