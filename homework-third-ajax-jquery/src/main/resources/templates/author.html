@@ -20,7 +20,7 @@
         </tbody>
     </table>
     <div class="row">
-        <button id="save-button" type="submit">Save</button>
+        <button id="save-button">Save</button>
     </div>
 </form>
 <div id="delete">
@@ -32,7 +32,7 @@
         var id = url.substring(url.lastIndexOf('id='));
 
         $(function () {
-            $.get('/api/author?' + id).done(function (author) {
+            $.get('/api/authors/' + id).done(function (author) {
                 $("tbody").append(`
                     <tr>
                         <td>
@@ -51,14 +51,9 @@
                     </form>
                 `);
 
-                $("#delete-button").click(function() {
-                    $("#delete-form").submit();
-                });
-
-                $("#save-button").click(function (event) {
-                    event.preventDefault();
+                $("#save-button").click(function () {
                     $.ajax({
-                        url: '/api/author',
+                        url: '/api/authors',
                         dataType: 'json',
                         contentType: "application/json",
                         type: 'POST',
@@ -69,8 +64,8 @@
                     })
                         .done(function(json) {
                             console.log(json);
+                            window.location.replace("/showAuthors");
                         });
-                    window.location.replace("/showAuthors");
                 });
             })
         });

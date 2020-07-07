@@ -24,7 +24,7 @@
 </h2>
 <script>
     $(function() {
-        $.get('/api/showAuthors').done(function (authors) {
+        $.get('/api/authors').done(function (authors) {
             authors.forEach(function (author) {
                 $('tbody').append(`
                     <tr>

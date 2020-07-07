@@ -15,17 +15,17 @@ public class AuthorRestController {
         this.service = service;
     }
 
-    @GetMapping("/api/showAuthors")
+    @GetMapping("/api/authors")
     public List<Author> showAuthors() {
         return service.getAllAuthors();
     }
 
-    @GetMapping("/api/author")
-    public Author showAuthor(@RequestParam("id") String id) {
+    @GetMapping("/api/authors/{id}")
+    public Author showAuthor(@PathVariable("id") String id) {
         return service.getAuthorById(id);
     }
 
-    @PostMapping("/api/author")
+    @PostMapping("/api/authors")
     public void saveAuthor(@RequestBody Author author) {
         service.save(author);
     }
