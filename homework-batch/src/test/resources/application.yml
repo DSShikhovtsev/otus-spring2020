@@ -1,0 +1,15 @@
+spring:
+  shell:
+    interactive:
+      enabled: false
+  batch:
+    job:
+      enabled: false
+  data:
+    mongodb:
+      port: 0
+      database: test
+
+  datasource:
+    data: data.sql
+    initialization-mode: always
