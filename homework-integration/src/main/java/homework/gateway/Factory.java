@@ -1,4 +1,4 @@
-package homework;
+package homework.gateway;
 
 import homework.domain.Furniture;
 import homework.domain.Tree;

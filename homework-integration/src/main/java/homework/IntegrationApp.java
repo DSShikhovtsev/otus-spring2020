@@ -7,9 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.config.EnableIntegration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan
 @Configuration
+@EnableScheduling
 @EnableIntegration
 @IntegrationComponentScan
 public class IntegrationApp {
@@ -19,9 +21,6 @@ public class IntegrationApp {
 
         WorkService workService = ctx.getBean(WorkService.class);
 
-        while (true) {
-            Thread.sleep(1000);
-            workService.treeWork();
-        }
+        workService.treeWork();
     }
 }
