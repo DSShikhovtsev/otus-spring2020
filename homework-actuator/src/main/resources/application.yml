@@ -1,0 +1,18 @@
+spring:
+  data:
+    mongodb:
+      database: library
+
+#actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+  health:
+    defaults:
+      enabled: true
