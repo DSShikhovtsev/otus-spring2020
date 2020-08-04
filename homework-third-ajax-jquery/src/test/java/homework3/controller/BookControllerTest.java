@@ -68,7 +68,7 @@ class BookControllerTest {
         book1.getAuthors().add(new Author("2", "test1"));
         book1.getGenres().add(new Genre("2", "genre1"));
         books.add(book1);
-        String booksList = Objects.requireNonNull(this.mvc.perform(get("/showBook")).andExpect(status().isOk()).andReturn()
+        String booksList = Objects.requireNonNull(this.mvc.perform(get("/showBooks")).andExpect(status().isOk()).andReturn()
                 .getModelAndView()).getModelMap().getAttribute("books").toString();
         assertEquals(booksList, books.toString());
     }
@@ -89,7 +89,7 @@ class BookControllerTest {
     void addBook() throws Exception  {
         Book book = new Book("3", "testInsert");
         this.mvc.perform(post("/book?id=&title=testInsert&addAuthorId=&addGenreId=&delAuthorId=&delGenreId=")).andExpect(status().isFound());
-        List<Book> returned = (List<Book>) Objects.requireNonNull(this.mvc.perform(get("/showBook")).andReturn()
+        List<Book> returned = (List<Book>) Objects.requireNonNull(this.mvc.perform(get("/showBooks")).andReturn()
                 .getModelAndView()).getModelMap().getAttribute("books");
         assertThat(returned.contains(book));
     }

@@ -29,4 +29,9 @@ public class AuthorRestController {
     public void saveAuthor(@RequestBody Author author) {
         service.save(author);
     }
+
+    @DeleteMapping("/api/authors/delete")
+    public void deleteAuthor(@RequestBody Author author) {
+        service.deleteAuthor(author);
+    }
 }

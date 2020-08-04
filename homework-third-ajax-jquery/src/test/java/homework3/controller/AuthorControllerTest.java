@@ -1,5 +1,6 @@
 package homework3.controller;
 
+import com.google.gson.Gson;
 import homework3.domain.Author;
 import homework3.service.author.AuthorService;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,28 +57,33 @@ class AuthorControllerTest  {
         List<Author> list = new ArrayList<>();
         list.add(author);
         list.add(author1);
-        String authorList = Objects.requireNonNull(this.mvc.perform(get("/showAuthor")).andExpect(status().isOk()).andReturn()
-                .getModelAndView()).getModelMap().getAttribute("authors").toString();
-        assertEquals(authorList, list.toString());
+        String json = new Gson().toJson(list);
+        this.mvc.perform(get("/api/authors")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
     }
 
     @Test
     @DisplayName("возвращать ожидаемого автора")
     void showAuthor() throws Exception {
         Author author = new Author("1", "author");
-        Author returned = (Author) Objects.requireNonNull(this.mvc.perform(get("/author?id=1")).andExpect(status().isOk()).andReturn()
-                .getModelAndView()).getModelMap().getAttribute("author");
-        assertEquals(author, returned);
+        String json = new Gson().toJson(author);this.mvc.perform(get("/api/authors/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
     }
 
     @Test
     @DisplayName("добавлять автора в таблицу")
     void addAuthor() throws Exception {
         Author author = new Author("3", "testInsert");
-        this.mvc.perform(post("/author?id=&name=testInsert")).andExpect(status().isFound());
-        List<Author> returned = (List<Author>) Objects.requireNonNull(this.mvc.perform(get("/showAuthor")).andReturn()
-                .getModelAndView()).getModelMap().getAttribute("authors");
-        assertThat(returned.contains(author));
+        String json = new Gson().toJson(author);
+        this.mvc.perform(post("/api/authors")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
+
     }
 
     @Test
@@ -92,9 +98,10 @@ class AuthorControllerTest  {
     @Test
     @DisplayName("удалять автора")
     void deleteAuthor() throws Exception {
+        String json = new Gson().toJson(new Author("2", "author1"));
         this.mvc.perform(MockMvcRequestBuilders
-                .post("/authorDelete?id=1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isFound());
+                .delete("/api/authors/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
     }
 }

@@ -81,7 +81,7 @@ class CommentControllerTest {
         List<Comment> list = new ArrayList<>();
         list.add(comment);
         list.add(comment1);
-        String commentList = Objects.requireNonNull(this.mvc.perform(get("/showComment")).andExpect(status().isOk()).andReturn()
+        String commentList = Objects.requireNonNull(this.mvc.perform(get("/showComments")).andExpect(status().isOk()).andReturn()
                 .getModelAndView()).getModelMap().getAttribute("comments").toString();
         assertEquals(commentList, list.toString());
     }
@@ -94,7 +94,7 @@ class CommentControllerTest {
         book.getGenres().add(new Genre("1", "genre"));
         Comment comment = new Comment("3", "testInsert", book);
         this.mvc.perform(post("/comment?id=&comment=testInsert&idBook=1")).andExpect(status().isFound());
-        List<Comment> returned = (List<Comment>) Objects.requireNonNull(this.mvc.perform(get("/showComment")).andReturn()
+        List<Comment> returned = (List<Comment>) Objects.requireNonNull(this.mvc.perform(get("/showComments")).andReturn()
                 .getModelAndView()).getModelMap().getAttribute("comments");
         assertThat(returned.contains(comment));
     }

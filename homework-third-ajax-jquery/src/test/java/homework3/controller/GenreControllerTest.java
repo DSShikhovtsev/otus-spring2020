@@ -56,7 +56,7 @@ class GenreControllerTest {
         List<Genre> list = new ArrayList<>();
         list.add(genre);
         list.add(genre1);
-        String genreList = Objects.requireNonNull(this.mvc.perform(get("/showGenre")).andExpect(status().isOk()).andReturn()
+        String genreList = Objects.requireNonNull(this.mvc.perform(get("/showGenres")).andExpect(status().isOk()).andReturn()
                 .getModelAndView()).getModelMap().getAttribute("genres").toString();
         assertEquals(genreList, list.toString());
     }
@@ -75,7 +75,7 @@ class GenreControllerTest {
     void addGenre() throws Exception {
         Genre genre = new Genre("3", "testInsert");
         this.mvc.perform(post("/genre?id=&description=testInsert")).andExpect(status().isFound());
-        List<Genre> returned = (List<Genre>) Objects.requireNonNull(this.mvc.perform(get("/showGenre")).andReturn()
+        List<Genre> returned = (List<Genre>) Objects.requireNonNull(this.mvc.perform(get("/showGenres")).andReturn()
                 .getModelAndView()).getModelMap().getAttribute("genres");
         assertThat(returned.contains(genre));
     }

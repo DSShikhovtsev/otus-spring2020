@@ -45,4 +45,9 @@ public class AuthorServiceMongo implements AuthorService {
     public void deleteAuthorById(String id) {
         authorRepository.deleteById(id);
     }
+
+    @Override
+    public void deleteAuthor(Author author) {
+        authorRepository.delete(author);
+    }
 }

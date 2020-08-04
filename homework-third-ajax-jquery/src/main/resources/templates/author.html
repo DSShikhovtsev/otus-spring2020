@@ -17,41 +17,39 @@
         </tr>
         </thead>
         <tbody>
+            <tr>
+                <td>
+                    <input id="id-input" type="text" readOnly/>
+                </td>
+                <td>
+                    <input id="holder-input" type="text"/>
+                </td>
+            </tr>
         </tbody>
     </table>
     <div class="row">
-        <button id="save-button">Save</button>
+        <button id="save-button" type="submit">Save</button>
     </div>
 </form>
 <div id="delete">
-
+    <form id="delete-form">
+        <div className="row">
+            <button id="delete-button" type="submit">Delete</button>
+        </div>
+    </form>
 </div>
 <script>
     $(document).ready(function () {
         var url = document.URL;
-        var id = url.substring(url.lastIndexOf('id='));
+        var id = url.substring(url.lastIndexOf('id=') + 3);
 
         $(function () {
             $.get('/api/authors/' + id).done(function (author) {
-                $("tbody").append(`
-                    <tr>
-                        <td>
-                            <input id="id-input" type="text" readOnly value="${author.id}"/>
-                        </td>
-                        <td>
-                            <input id="holder-input" type="text" value="${author.name}"/>
-                        </td>
-                    </tr>
-                `);
-                $("#delete").append(`
-                    <form id="delete-form" method="post" action="/authorDelete?id=${author.id}">
-                        <div className="row">
-                            <button id="delete-button" type="submit">Delete</button>
-                        </div>
-                    </form>
-                `);
+                $("#id-input").val(author.id);
+                $("#holder-input").val(author.name);
 
-                $("#save-button").click(function () {
+                $("#save-button").click(function (event) {
+                    event.preventDefault();
                     $.ajax({
                         url: '/api/authors',
                         dataType: 'json',
@@ -64,8 +62,23 @@
                     })
                         .done(function(json) {
                             console.log(json);
-                            window.location.replace("/showAuthors");
                         });
+                    window.location.replace("/showAuthors");
+                });
+
+                $("#delete-button").click(function(event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: '/api/authors/delete',
+                        dataType: 'json',
+                        contentType: "application/json",
+                        type: 'DELETE',
+                        data: JSON.stringify({
+                            id: $('#id-input').val(),
+                            name: $('#holder-input').val()
+                        })
+                    });
+                    window.location.replace("/showAuthors");
                 });
             })
         });
