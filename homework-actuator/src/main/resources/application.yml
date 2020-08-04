@@ -8,7 +8,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "metrics, loggers, health"
+        include: "metrics, loggers, health, logfile"
   endpoint:
     health:
       enabled: true
@@ -16,3 +16,6 @@ management:
   health:
     defaults:
       enabled: true
+logging:
+  file:
+    name: log.log
