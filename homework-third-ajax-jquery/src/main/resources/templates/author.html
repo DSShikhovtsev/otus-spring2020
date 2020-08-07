@@ -59,26 +59,17 @@
                             id: $('#id-input').val(),
                             name: $('#holder-input').val()
                         })
-                    })
-                        .done(function(json) {
-                            console.log(json);
-                        });
-                    window.location.replace("/showAuthors");
+                    }).done(window.location.replace("/showAuthors"));
                 });
 
                 $("#delete-button").click(function(event) {
                     event.preventDefault();
                     $.ajax({
-                        url: '/api/authors/delete',
+                        url: '/api/authors/' + author.id,
                         dataType: 'json',
                         contentType: "application/json",
-                        type: 'DELETE',
-                        data: JSON.stringify({
-                            id: $('#id-input').val(),
-                            name: $('#holder-input').val()
-                        })
-                    });
-                    window.location.replace("/showAuthors");
+                        type: 'DELETE'
+                    }).done(window.location.replace("/showAuthors"));
                 });
             })
         });

@@ -2,9 +2,7 @@ package homework3.controller.rest;
 
 import homework3.domain.Book;
 import homework3.service.book.BookService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,13 +15,23 @@ public class BookRestController {
         this.service = service;
     }
 
-    @GetMapping("/api/showBooks")
+    @GetMapping("/api/books")
     public List<Book> showBooks() {
         return service.getAllBooks();
     }
 
-    @GetMapping("/api/book")
-    public Book showBook(@RequestParam("id") String id) {
+    @GetMapping("/api/books/{id}")
+    public Book showBook(@PathVariable("id") String id) {
         return service.getBookById(id);
+    }
+
+    @PostMapping("/api/books")
+    public void saveBook(@RequestBody Book book) {
+        service.save(book);
+    }
+
+    @DeleteMapping("/api/books/{id}")
+    public void deleteBook(@PathVariable("id") String id) {
+        service.deleteBookById(id);
     }
 }

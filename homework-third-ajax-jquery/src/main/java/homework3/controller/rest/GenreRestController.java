@@ -15,18 +15,23 @@ public class GenreRestController {
         this.service = service;
     }
 
-    @GetMapping("/api/showGenres")
+    @GetMapping("/api/genres")
     public List<Genre> showGenres() {
         return service.getAllGenres();
     }
 
-    @GetMapping("/api/genre")
-    public Genre showGenre(@RequestParam("id") String id) {
+    @GetMapping("/api/genres/{id}")
+    public Genre showGenre(@PathVariable("id") String id) {
         return service.getGenreById(id);
     }
 
-    @PostMapping("/api/genre")
+    @PostMapping("/api/genres")
     public void saveGenre(@RequestBody Genre genre) {
         service.save(genre);
+    }
+
+    @DeleteMapping("/api/genres/{id}")
+    public void deleteGenre(@PathVariable("id") String id) {
+        service.deleteGenreById(id);
     }
 }

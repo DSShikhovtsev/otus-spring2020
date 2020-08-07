@@ -39,12 +39,12 @@ public class GenreController {
     public String saveGenre(Genre genre) {
         if (genre.getId() != null && genre.getId().isEmpty()) genre.setId(null);
         service.save(genre);
-        return "redirect:/showGenre";
+        return "redirect:/showGenres";
     }
 
     @PostMapping("/genreDelete")
     public String deleteGenre(@RequestParam("id") String id) {
         service.deleteGenreById(id);
-        return "redirect:/showGenre";
+        return "redirect:/showGenres";
     }
 }

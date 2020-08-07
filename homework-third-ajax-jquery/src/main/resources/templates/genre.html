@@ -17,6 +17,14 @@
         </tr>
         </thead>
         <tbody>
+            <tr>
+                <td>
+                    <input id="id-input" type="text" readOnly/>
+                </td>
+                <td>
+                    <input id="holder-input" type="text"/>
+                </td>
+            </tr>
         </tbody>
     </table>
     <div class="row">
@@ -24,41 +32,26 @@
     </div>
 </form>
 <div id="delete">
-
+    <form id="delete-form">
+        <div className="row">
+            <button id="delete-button" type="submit">Delete</button>
+        </div>
+    </form>
 </div>
 <script>
     $(document).ready(function () {
         var url = document.URL;
-        var id = url.substring(url.lastIndexOf('id='));
+        var id = url.substring(url.lastIndexOf('id=') + 3);
 
         $(function () {
-            $.get('/api/genre?' + id).done(function (genre) {
-                $("tbody").append(`
-                    <tr>
-                        <td>
-                            <input id="id-input" type="text" readOnly value="${genre.id}"/>
-                        </td>
-                        <td>
-                            <input id="holder-input" type="text" value="${genre.description}"/>
-                        </td>
-                    </tr>
-                `);
-                $("#delete").append(`
-                    <form id="delete-form" method="post" action="/genreDelete?id=${genre.id}">
-                        <div className="row">
-                            <button id="delete-button" type="submit">Delete</button>
-                        </div>
-                    </form>
-                `);
-
-                $("#delete-button").click(function() {
-                    $("#delete-form").submit();
-                });
+            $.get('/api/genres/' + id).done(function (genre) {
+                $("#id-input").val(genre.id);
+                $("#holder-input").val(genre.description);
 
                 $("#save-button").click(function (event) {
                     event.preventDefault();
                     $.ajax({
-                        url: '/api/genre',
+                        url: '/api/genres',
                         dataType: 'json',
                         contentType: "application/json",
                         type: 'POST',
@@ -66,11 +59,17 @@
                             id: $('#id-input').val(),
                             description: $('#holder-input').val()
                         })
-                    })
-                        .done(function(json) {
-                            console.log(json);
-                        });
-                    window.location.replace("/showGenres");
+                    }).done(window.location.replace("/showGenres"));
+                });
+
+                $("#delete-button").click(function(event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: '/api/genres/' + genre.id,
+                        dataType: 'json',
+                        contentType: "application/json",
+                        type: 'DELETE'
+                    }).done(window.location.replace("/showGenres"));
                 });
             })
         });

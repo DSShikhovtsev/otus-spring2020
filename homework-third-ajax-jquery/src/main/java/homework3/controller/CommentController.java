@@ -42,12 +42,12 @@ public class CommentController {
     public String saveComment(@RequestParam("idBook") String idBook, Comment comm) {
         if (comm.getId() != null && comm.getId().isEmpty()) comm.setId(null);
         service.addComment(idBook, comm);
-        return "redirect:/showComment";
+        return "redirect:/showComments";
     }
 
     @PostMapping("commentDelete")
     public String deleteComment(@RequestParam("id") String id) {
         service.deleteComment(id);
-        return "redirect:/showComment";
+        return "redirect:/showComments";
     }
 }

@@ -50,12 +50,12 @@ public class BookController {
         service.deleteAuthorFomBook(book, delAuthorId);
         service.deleteGenreFromBook(book, delGenreId);
         service.save(book);
-        return "redirect:/showBook";
+        return "redirect:/showBooks";
     }
 
     @PostMapping("/bookDelete")
     public String deleteBook(@RequestParam("id") String id) {
         service.deleteBookById(id);
-        return "redirect:/showBook";
+        return "redirect:/showBooks";
     }
 }

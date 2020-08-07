@@ -30,8 +30,8 @@ public class AuthorRestController {
         service.save(author);
     }
 
-    @DeleteMapping("/api/authors/delete")
-    public void deleteAuthor(@RequestBody Author author) {
-        service.deleteAuthor(author);
+    @DeleteMapping("/api/authors/{id}")
+    public void deleteAuthor(@PathVariable("id") String id) {
+        service.deleteAuthorById(id);
     }
 }

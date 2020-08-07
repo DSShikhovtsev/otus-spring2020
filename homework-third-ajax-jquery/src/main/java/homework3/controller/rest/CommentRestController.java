@@ -15,18 +15,23 @@ public class CommentRestController {
         this.service = service;
     }
 
-    @GetMapping("/api/showComments")
+    @GetMapping("/api/comments")
     public List<Comment> showComments() {
         return service.getAllComments();
     }
 
-    @GetMapping("/api/comment")
-    public Comment showComment(@RequestParam("id") String id) {
+    @GetMapping("/api/comments/{id}")
+    public Comment showComment(@PathVariable("id") String id) {
         return service.getById(id);
     }
 
-    @PostMapping("/api/comment")
+    @PostMapping("/api/comments")
     public void saveComment(@RequestBody Comment comment, @RequestParam String bookId) {
         service.addComment(bookId, comment);
+    }
+
+    @DeleteMapping("/api/comments/{id}")
+    public void deleteComment(@PathVariable("id") String id) {
+        service.deleteComment(id);
     }
 }
