@@ -1,0 +1,21 @@
+spring:
+  data:
+    mongodb:
+      database: library
+
+#actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "metrics, loggers, health, logfile"
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+logging:
+  file:
+    name: log.log

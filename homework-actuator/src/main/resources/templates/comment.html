@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Comment page</title>
+</head>
+<body>
+
+<form id="edit-form" th:action="@{/comment(id=${comment.id})}" th:method="post" action="comment.html">
+    <h1>Comment Info:</h1>
+
+    <div class="row">
+        <label for="id-input">ID:</label>
+        <input id="id-input" type="text" readonly="readonly" th:value="${comment.id}" value="none">
+    </div>
+
+    <div class="row">
+        <label for="holder-input">Comment:</label>
+        <input id="holder-input" name="comment" type="text" th:value="${comment.comment}"/>
+    </div>
+
+    <div class="row">
+        <label for="id-input">ID book:</label>
+        <input id="id-book-input" name="idBook" type="text" th:value="${comment.book.id}" value="none">
+    </div>
+
+    <div class="row">
+        <table class="authors">
+            <thead>
+            <tr>
+                <h2>
+                    <th>Author</th>
+                </h2>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="author : ${comment.book.authors}">
+                <td th:text="${author.name}">none</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <table class="genres">
+            <thead>
+            <tr>
+                <h2>
+                    <th>Genre</th>
+                </h2>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="genre : ${comment.book.genres}">
+                <td th:text="${genre.description}">none</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+</form>
+
+</body>
+</html>

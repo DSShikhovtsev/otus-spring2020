@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Books</title>
+</head>
+
+<body>
+    <h1>Books: </h1>
+
+    <table class="books">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Authors</th>
+            <th>Genres</th>
+            <th>Edit Book</th>
+            <th>Delete Book</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <form id="delete-form" th:action="@{/bookDelete(id=${book.id})}" th:method="post" action="booksPage.html">
+                <td th:text="${book.title}">none</td>
+                <td>
+                    <table class="authors">
+                        <thead>
+                        <tr>
+                            <h2>
+                                <th>Author</th>
+                            </h2>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="author : ${book.authors}">
+                            <td th:text="${author.name}">none</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <table class="genres">
+                        <thead>
+                        <tr>
+                            <h2>
+                                <th>Genre</th>
+                            </h2>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="genre : ${book.genres}">
+                            <td th:text="${genre.description}">none</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <a th:href="@{/book(id=${book.id})}" href="book.html">Edit</a>
+                </td>
+                <td>
+                    <strong>
+                        <button type="submit">Delete</button>
+                    </strong>
+                </td>
+            </form>
+        </tr>
+        </tbody>
+    </table>
+<h2>
+    <a th:href="@{/}">Back</a>
+</h2>
+</body>
+</html>

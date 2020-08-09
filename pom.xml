@@ -10,6 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>homework-first</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>homework-actuator</module>
+    </modules>
 
     <dependencies>
         <dependency>
