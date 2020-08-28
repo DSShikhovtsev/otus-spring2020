@@ -1,5 +1,7 @@
 package webflux.service;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import webflux.domain.Author;
 import webflux.repository.AuthorRepository;
 import webflux.service.author.AuthorService;
@@ -12,9 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,9 +23,9 @@ import static org.mockito.BDDMockito.given;
 
 @DisplayName("Service для работы с авторами")
 @SpringBootTest(classes = AuthorServiceMongo.class)
-class AuthorServiceMongoTest {
+public class AuthorServiceMongoTest {
 
-    /*@Autowired
+    @Autowired
     private AuthorService service;
 
     @MockBean
@@ -33,20 +34,24 @@ class AuthorServiceMongoTest {
     @BeforeEach
     void setUp() {
         Mockito.reset(repository);
-        List<Author> list = new ArrayList<>();
-        list.add(new Author("1", "test"));
-        list.add(new Author("2", "test1"));
-        Mockito.when(repository.findById("1")).thenReturn(Optional.of(new Author("1", "test"))).thenReturn(Optional.empty());
-        Mockito.when(repository.findById("2")).thenReturn(Optional.of(new Author("2", "test1"))).thenReturn(Optional.of(new Author("2", "update")));
-        given(repository.findById("3")).willReturn(Optional.of(new Author("3", "testInsert")));
-        given(repository.findAll()).willReturn(list);
+        Author author = new Author("1", "test");
+        Author author1 = new Author("2", "test1");
+        Author update = new Author("2", "update");
+        Author author3 = new Author("3", "testInsert");
+        Mockito.when(repository.findById("1")).thenReturn(Mono.just(author)).thenReturn(Mono.empty());
+        Mockito.when(repository.findById("2")).thenReturn(Mono.just(author1)).thenReturn(Mono.just(update));
+        given(repository.findById("3")).willReturn(Mono.just(author3));
+        given(repository.deleteAuthorById("1")).willReturn(Mono.empty());
+        given(repository.save(update)).willReturn(Mono.just(update));
+        given(repository.save(author3)).willReturn(Mono.just(author3));
+        given(repository.findAll()).willReturn(Flux.just(author, author1));
     }
 
     @Test
     @DisplayName("возвращать ожидаемого автора")
     void getAuthorById() {
         Author author = new Author("1", "test");
-        assertThat(author).isEqualToComparingFieldByField(service.getAuthorById("1"));
+        assertThat(author).isEqualToComparingFieldByField(service.getAuthorById("1").block());
     }
 
     @Test
@@ -54,7 +59,7 @@ class AuthorServiceMongoTest {
     void addAuthor() {
         Author author = new Author("3", "testInsert");
         service.save(author);
-        assertThat(author).isEqualToComparingFieldByField(service.getAuthorById("3"));
+        assertThat(author).isEqualToComparingFieldByField(service.getAuthorById("3").block());
     }
 
     @Test
@@ -62,26 +67,26 @@ class AuthorServiceMongoTest {
     void getAllAuthors() {
         Author author = new Author("1", "test");
         Author author1 = new Author("2", "test1");
-        List<Author> authors = service.getAllAuthors();
+        List<Author> authors = service.getAllAuthors().toStream().collect(Collectors.toList());
         assertThat(authors).hasSize(2).containsExactlyInAnyOrder(author, author1);
     }
 
     @Test
     @DisplayName("обновлять имя автора")
     void updateAuthor() {
-        Author author = service.getAuthorById("2");
+        Author author = service.getAuthorById("2").block();
         author.setName("update");
         service.updateAuthor(author);
-        assertEquals(author.getName(), service.getAuthorById("2").getName());
+        assertEquals(author.getName(), service.getAuthorById("2").block().getName());
     }
 
     @Test
     @DisplayName("удалять автора")
     void deleteAuthorById() {
-        Author author = service.getAuthorById("1");
+        Author author = service.getAuthorById("1").block();
         assertThat(author).isNotNull();
         service.deleteAuthorById("1");
-        author = service.getAuthorById("1");
+        author = service.getAuthorById("1").block();
         assertThat(author).isNull();
-    }*/
+    }
 }

@@ -37,7 +37,7 @@ public class AuthorServiceMongo implements AuthorService {
     @Transactional
     @Override
     public void updateAuthor(Author author) {
-        authorRepository.save(author);
+        authorRepository.save(author).block();
     }
 
     @Transactional
