@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Author page</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<form id="edit-form" method="post" action="author.html">
+    <h1>Author Info:</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID: </th>
+            <th>Name: </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input id="id-input" type="text" readOnly/>
+                </td>
+                <td>
+                    <input id="holder-input" type="text"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <button id="save-button" type="submit">Save</button>
+    </div>
+</form>
+<div id="delete">
+    <form id="delete-form">
+        <div className="row">
+            <button id="delete-button" type="submit">Delete</button>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        var url = document.URL;
+        var id = url.substring(url.lastIndexOf('id=') + 3);
+
+        $(function () {
+            $.get('/api/authors/' + id).done(function (author) {
+                $("#id-input").val(author.id);
+                $("#holder-input").val(author.name);
+
+                $("#save-button").click(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: '/api/authors',
+                        dataType: 'json',
+                        contentType: "application/json",
+                        type: 'POST',
+                        data: JSON.stringify({
+                            id: $('#id-input').val(),
+                            name: $('#holder-input').val()
+                        })
+                    }).done(window.location.replace("/showAuthors"));
+                });
+
+                $("#delete-button").click(function(event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: '/api/authors/' + author.id,
+                        dataType: 'json',
+                        contentType: "application/json",
+                        type: 'DELETE'
+                    }).done(window.location.replace("/showAuthors"));
+                });
+            })
+        });
+    });
+</script>
+</body>
+</html>
