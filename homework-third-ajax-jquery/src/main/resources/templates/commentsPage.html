@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Comments</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Comments: </h1>
+
+    <table class="comments">
+        <thead>
+        <tr>
+            <th>Comment</th>
+            <th>Book</th>
+            <th>Edit Comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+<h2>
+    <a th:href="@{/}">Back</a>
+</h2>
+    <script>
+        $(function() {
+            $.get('/api/comments').done(function (comments) {
+                comments.forEach(function (comment) {
+                    $('tbody').append(`
+                    <tr>
+                        <td defaultValue="none">${comment.comment}</td>
+                        <td>${comment.book.title}</td>
+                        <td>
+                            <a href="/comment?id=${comment.id}">Edit</a>
+                        </td>
+                    </tr>
+                `)
+                })
+            })
+        });
+    </script>
+</body>
+</html>

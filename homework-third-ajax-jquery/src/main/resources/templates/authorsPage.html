@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Authors</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Authors: </h1>
+
+    <table class="authors">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Edit Author</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+<h2>
+    <a th:href="@{/}">Back</a>
+</h2>
+<script>
+    $(function() {
+        $.get('/api/authors').done(function (authors) {
+            authors.forEach(function (author) {
+                $('tbody').append(`
+                    <tr>
+                        <td defaultValue="none">${author.name}</td>
+                        <td>
+                            <a href="/author?id=${author.id}">Edit</a>
+                        </td>
+                    </tr>
+                `)
+            })
+        })
+    });
+</script>
+</body>
+</html>
