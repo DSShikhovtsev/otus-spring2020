@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Genres</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Genres: </h1>
+
+    <table class="genres">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Edit Genre</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+<h2>
+    <a th:href="@{/}">Back</a>
+</h2>
+    <script>
+        $(function() {
+            $.get('/api/genres').done(function (genres) {
+                genres.forEach(function (genre) {
+                    $('tbody').append(`
+                    <tr>
+                        <td defaultValue="none">${genre.description}</td>
+                        <td>
+                            <a href="/genre?id=${genre.id}">Edit</a>
+                        </td>
+                    </tr>
+                `)
+                })
+            })
+        });
+    </script>
+</body>
+</html>
