@@ -6,5 +6,5 @@ import webflux.domain.Author;
 
 public interface AuthorRepository extends ReactiveMongoRepository<Author, String> {
 
-    Mono<String> deleteAuthorById(String id);
+    Mono<Void> deleteAuthorById(String id);
 }

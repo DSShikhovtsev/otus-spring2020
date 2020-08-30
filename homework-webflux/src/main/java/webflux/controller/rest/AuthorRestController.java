@@ -26,8 +26,8 @@ public class AuthorRestController {
     }
 
     @PostMapping("/api/authors")
-    public void saveAuthor(@RequestBody Author author) {
-        service.save(author);
+    public Mono<Author> saveAuthor(@RequestBody Author author) {
+        return service.save(author);
     }
 
     @DeleteMapping("/api/authors/{id}")

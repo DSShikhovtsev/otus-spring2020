@@ -18,8 +18,8 @@ public class AuthorServiceMongo implements AuthorService {
 
     @Transactional
     @Override
-    public void save(Author author) {
-        authorRepository.save(author).block();
+    public Mono<Author> save(Author author) {
+        return authorRepository.save(author);
     }
 
     @Transactional(readOnly = true)
@@ -36,14 +36,14 @@ public class AuthorServiceMongo implements AuthorService {
 
     @Transactional
     @Override
-    public void updateAuthor(Author author) {
-        authorRepository.save(author).block();
+    public Mono<Author> updateAuthor(Author author) {
+        return authorRepository.save(author);
     }
 
     @Transactional
     @Override
     public void deleteAuthorById(String id) {
-        authorRepository.deleteAuthorById(id).block();
+        authorRepository.deleteAuthorById(id);
     }
 
     @Override

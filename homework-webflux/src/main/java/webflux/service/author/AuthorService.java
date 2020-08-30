@@ -6,10 +6,10 @@ import webflux.domain.Author;
 
 public interface AuthorService {
 
-    void save(Author author);
+    Mono<Author> save(Author author);
     Mono<Author> getAuthorById(String id);
     Flux<Author> getAllAuthors();
-    void updateAuthor(Author author);
+    Mono<Author> updateAuthor(Author author);
     void deleteAuthorById(String id);
     void deleteAuthor(Author author);
 }

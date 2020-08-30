@@ -1,5 +1,6 @@
 package webflux.service;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
 import webflux.domain.Author;
 import webflux.domain.Book;
 import webflux.domain.Genre;
@@ -39,6 +40,8 @@ class BookServiceMongoTest {
     private AuthorRepository authorRepository;
     @MockBean
     private GenreRepository genreRepository;
+    @MockBean
+    private MongoTemplate mongoTemplate;
 
     @BeforeEach
     void setUp() {

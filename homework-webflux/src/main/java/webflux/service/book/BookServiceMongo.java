@@ -1,6 +1,8 @@
 package webflux.service.book;
 
-import reactor.core.publisher.Mono;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import webflux.domain.Author;
 import webflux.domain.Book;
 import webflux.domain.Genre;
@@ -20,12 +22,14 @@ public class BookServiceMongo implements BookService {
     private final CommentRepository commentRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
+    private final MongoTemplate template;
 
-    public BookServiceMongo(BookRepository bookRepository, CommentRepository commentRepository, AuthorRepository authorRepository, GenreRepository genreRepository) {
+    public BookServiceMongo(BookRepository bookRepository, CommentRepository commentRepository, AuthorRepository authorRepository, GenreRepository genreRepository, MongoTemplate template) {
         this.bookRepository = bookRepository;
         this.commentRepository = commentRepository;
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;
+        this.template = template;
     }
 
     @Transactional
@@ -61,7 +65,8 @@ public class BookServiceMongo implements BookService {
 
     @Override
     public void addAuthorToBook(Book book, String id) {
-        Author author = authorRepository.findById(id).block();
+        Query query = new Query(Criteria.where("id").is(id));
+        Author author = template.find(query, Author.class).get(0);
         if (author != null) {
             book.getAuthors().add(author);
         }
